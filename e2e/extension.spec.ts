@@ -47,6 +47,15 @@ test.describe("Veil Chrome extension", () => {
     await page.evaluate(() => (window as any).addAssistant("Dear [PERSON_1], your PAN [PAN_1] is linked; we will call [PHONE_1]."));
     await expect(page.locator("#messages")).toContainText("Dear Rohan Mehta, your PAN BQRPM4821K is linked");
     await expect(page.locator("#veil-host .badge .count")).toHaveText("3");
+
+    // Streaming UIs split a tag across elements: "Client [", "PERS", "ON_1", "]: the taxpayer".
+    await page.evaluate(() => (window as any).addAssistantChunks(["Client [", "PERS", "ON_1", "]: the taxpayer. PAN [PAN_", "1] matches."]));
+    const last = page.locator("#messages .msg").last();
+    await expect(last).toHaveText("Client Rohan Mehta: the taxpayer. PAN BQRPM4821K matches.");
+    // "Show tags" puts the tags back exactly.
+    await page.locator("#veil-host .badge").hover();
+    await page.locator("#veil-host .badge").getByRole("button", { name: "Show tags" }).click();
+    await expect(last).toHaveText("Client [PERSON_1]: the taxpayer. PAN [PAN_1] matches.");
   });
 
   test("Esc cancels; 'Paste original' passes the text through untouched", async ({ ctx }) => {

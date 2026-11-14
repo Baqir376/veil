@@ -238,50 +238,88 @@ async function flow(text: string, target: Editable, replaceAll: boolean) {
 }
 
 // ───────────────────────── Restore the AI's answers, on this screen only ─────────────────────────
+// Chat UIs stream answers in pieces, often one element per word/chunk (for fade-in effects), so a tag like
+// "[PERSON_1]" can be split across several text nodes. We therefore work per BLOCK (paragraph, list item…):
+// join its text, find tags, and write each real value into the node where the tag starts — editing text
+// in place only (no nodes added or removed), so the site's own rendering keeps working.
+const LOOSE = /\[\s*([A-Za-z][A-Za-z0-9_]*?_\d+)\s*(?:[·•|:\-–—\s][^\]\n]*)?\]/g;
+const BLOCK = "p, li, td, th, h1, h2, h3, h4, h5, h6, pre, blockquote, dd, dt, figcaption, div";
 const originals = new Map<Text, string>();
-const hits = new Map<Text, { start: number; end: number }[]>();
+const painted = new Map<Text, { out: string; hits: { start: number; end: number }[] }>();
 const highlight = typeof Highlight !== "undefined" ? new Highlight() : null;
 if (highlight && CSS.highlights) {
   CSS.highlights.set("veil-restored", highlight);
   const st = document.createElement("style");
-  st.textContent = "::highlight(veil-restored) { background-color: #ffe08a; color: inherit; text-decoration: underline 2px #0f7b5f; }";
+  st.textContent = "::highlight(veil-restored) { background-color: #ffe08a; color: #16150f; text-decoration: underline 2px #0f7b5f; }";
   document.head.appendChild(st);
 }
 
 function skip(node: Node) {
   const el = node.parentElement;
-  return !el || !!el.closest('[contenteditable="true"], textarea, input, script, style, #veil-host');
+  return !el || !!el.closest('[contenteditable="true"], textarea, input, script, style, title, #veil-host');
 }
+
+/** Restore every known tag inside one block, across however many text nodes it is split into. */
+function restoreBlock(block: Element) {
+  const nodes: Text[] = [];
+  const w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, { acceptNode: (n) => (skip(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT) });
+  while (w.nextNode()) nodes.push(w.currentNode as Text);
+  if (!nodes.length) return;
+  const datas = nodes.map((n) => n.data);
+  const combined = datas.join("");
+  const matches = [...combined.matchAll(LOOSE)].filter((m) => vault.idToValue.has(m[1].toUpperCase()));
+  if (!matches.length) return;
+  const owner: number[] = [];
+  datas.forEach((d, i) => { for (let k = 0; k < d.length; k++) owner.push(i); });
+  const out = datas.map(() => "");
+  const nodeHits = datas.map(() => [] as { start: number; end: number }[]);
+  let cur = 0;
+  for (const m of matches) {
+    for (let k = cur; k < m.index!; k++) out[owner[k]] += combined[k];
+    const i = owner[m.index!];
+    const v = vault.idToValue.get(m[1].toUpperCase())!;
+    nodeHits[i].push({ start: out[i].length, end: out[i].length + v.length });
+    out[i] += v;
+    cur = m.index! + m[0].length;
+  }
+  for (let k = cur; k < combined.length; k++) out[owner[k]] += combined[k];
+  nodes.forEach((n, i) => {
+    if (out[i] === datas[i]) return;
+    if (!originals.has(n)) originals.set(n, datas[i]);
+    n.data = out[i];
+    painted.set(n, { out: out[i], hits: nodeHits[i] });
+  });
+}
+
 function scan() {
   if (!showReal || !vault.size) return;
-  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-    acceptNode: (n) => (n.nodeValue && n.nodeValue.includes("[") && !skip(n) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
+  const blocks = new Set<Element>();
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode: (n) => (n.nodeValue && /[\[\]]/.test(n.nodeValue) && !skip(n) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
   });
-  const todo: Text[] = [];
-  while (walker.nextNode()) todo.push(walker.currentNode as Text);
-  for (const t of todo) {
-    const r = vault.restoreWithPositions(t.data);
-    if (!r) continue;
-    originals.set(t, t.data);
-    hits.set(t, r.hits);
-    t.data = r.out; // in-place text change: no DOM nodes added or removed, so the site's UI stays intact
+  while (w.nextNode()) {
+    const b = (w.currentNode as Text).parentElement?.closest(BLOCK);
+    if (b) blocks.add(b);
   }
+  // Innermost blocks first, so a big container <div> doesn't swallow a paragraph's work.
+  for (const b of [...blocks].sort((a, c) => (a.contains(c) ? 1 : c.contains(a) ? -1 : 0))) restoreBlock(b);
   paint();
 }
+
 function paint() {
   if (!highlight) return;
   highlight.clear();
-  for (const [t, hs] of hits) {
-    if (!t.isConnected) { hits.delete(t); originals.delete(t); continue; }
-    for (const h of hs) {
-      if (h.end > t.data.length) continue;
+  for (const [t, p] of painted) {
+    // Drop highlights whose node was removed or reused by the site for different text.
+    if (!t.isConnected || t.data !== p.out) { painted.delete(t); continue; }
+    for (const h of p.hits) {
       const r = new Range(); r.setStart(t, h.start); r.setEnd(t, h.end); highlight.add(r);
     }
   }
 }
 function unrestoreAll() {
-  for (const [t, orig] of originals) if (t.isConnected) t.data = orig;
-  originals.clear(); hits.clear(); highlight?.clear();
+  for (const [t, orig] of originals) if (t.isConnected && painted.get(t)?.out === t.data) t.data = orig;
+  originals.clear(); painted.clear(); highlight?.clear();
 }
 let pending = 0;
 function scheduleScan() { cancelAnimationFrame(pending); pending = requestAnimationFrame(() => setTimeout(scan, 60)); }

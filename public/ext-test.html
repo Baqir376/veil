@@ -16,6 +16,13 @@
         ed.textContent += t;
         window.__pasted = (window.__pasted || []).concat(t);
       });
+      // Like ChatGPT's streaming: each chunk in its own <span>, so a tag can be split across elements.
+      window.addAssistantChunks = (chunks) => {
+        const d = document.createElement("p");
+        d.className = "msg";
+        for (const c of chunks) { const s = document.createElement("span"); s.textContent = c; d.appendChild(s); }
+        document.getElementById("messages").appendChild(d);
+      };
       window.addAssistant = (text) => {
         const d = document.createElement("div");
         d.className = "msg"; d.textContent = text;
