@@ -33,14 +33,13 @@ export function Aurora({ intensity = 1 }: { intensity?: number }) {
   );
 }
 
+/** A calm colour field: no drifting, no morphing — only a very gentle lean toward the mouse. */
 function Blob({ b, p, intensity }: { b: typeof BLOBS[number]; p: { x: MotionValue<number>; y: MotionValue<number> }; intensity: number }) {
-  const tx = useTransform(p.x, (v) => v * b.k);
-  const ty = useTransform(p.y, (v) => v * b.k);
+  const tx = useTransform(p.x, (v) => v * b.k * 0.25);
+  const ty = useTransform(p.y, (v) => v * b.k * 0.25);
   return (
     <motion.div className="absolute rounded-full" style={{ left: b.x, top: b.y, width: b.s, height: b.s, x: tx, y: ty,
-      background: `radial-gradient(circle at 50% 50%, ${b.c}, transparent 68%)`, opacity: 0.32 * intensity, filter: "blur(40px)" }}
-      animate={{ scale: [1, 1.15, 0.95, 1], rotate: [0, 25, -15, 0], borderRadius: ["50%", "42% 58% 55% 45%", "55% 45% 40% 60%", "50%"] }}
-      transition={{ duration: b.d, repeat: Infinity, ease: "easeInOut" }} />
+      background: `radial-gradient(circle at 50% 50%, ${b.c}, transparent 68%)`, opacity: 0.22 * intensity, filter: "blur(50px)" }} />
   );
 }
 

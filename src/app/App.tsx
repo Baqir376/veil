@@ -7,10 +7,10 @@ import {
 import { availability, detectDirect, askCloud, nanoDetector } from "../nano";
 import { SAMPLES } from "../samples";
 import { buildReceipt, type Receipt } from "./receipt";
-import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide, RestoredView } from "./components";
+import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide, RestoredView, Tabs, VaultTiles, HybridSplit } from "./components";
 import { CursorLight, VeilMark, TiltCard } from "../site/effects";
 import { LiquidGlassDefs } from "../site/liquid";
-import { Aurora, FloatingTokens } from "../site/ambient";
+import { Aurora } from "../site/ambient";
 
 export type ModelState = "checking" | "warming" | "ready" | "safe" | "downloadable";
 
@@ -97,6 +97,7 @@ export function App() {
   const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState(true);
+  const [tab, setTab] = useState<"cloud" | "vault">("cloud");
   const runId = useRef(0);
 
   const safeMode = model === "safe" || model === "downloadable";
@@ -177,7 +178,6 @@ export function App() {
   return (
     <>
     <Aurora intensity={1.1} />
-    <FloatingTokens count={9} />
     <RimLight />
     <LiquidGlassDefs />
     <CursorLight />
@@ -277,21 +277,48 @@ export function App() {
         {text && (
           <section className="pane cloud">
             <div className="pane-head">
-              <h2><span className="zone cloud">to cloud</span> What the cloud will see</h2>
-              {masked && <span className="muted">{masked.vault.size} values held back</span>}
+              <h2><span className="zone cloud">to cloud</span></h2>
+              <Tabs value={tab} onChange={setTab} options={[
+                { id: "cloud", label: "What the cloud sees" },
+                { id: "vault", label: "Vault", count: masked?.vault.size ?? 0 },
+              ]} />
             </div>
-            {masked ? <CloudView masked={masked.masked} /> : <div className="doc muted">Analysing…</div>}
-            {result && (
-              <RiskCard
-                result={result}
-                suggestions={suggestions}
-                onMask={(q) => setAccept((a) => [...a, q])}
-                onKeep={(q) => setDismissed((d) => [...d, q])}
-              />
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div key={tab} initial={{ opacity: 0, x: tab === "vault" ? 24 : -24, filter: "blur(4px)" }}
+                animate={{ opacity: 1, x: 0, filter: "blur(0px)" }} exit={{ opacity: 0, x: tab === "vault" ? -24 : 24, filter: "blur(4px)" }}
+                transition={{ type: "spring", stiffness: 380, damping: 32 }}>
+                {tab === "cloud"
+                  ? (masked ? <CloudView masked={masked.masked} /> : <div className="doc muted">Analysing…</div>)
+                  : (masked ? <VaultTiles vault={masked.vault} /> : <div className="doc muted">Analysing…</div>)}
+              </motion.div>
+            </AnimatePresence>
           </section>
         )}
       </main>
+
+      {text && result && (
+        <motion.section className="bento" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}>
+          <div className="pane bento-card">
+            <p className="eyebrow">Held back on this device</p>
+            <p className="big-number"><motion.span key={masked?.vault.size} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>{masked?.vault.size ?? 0}</motion.span><small> values</small></p>
+            <div className="kind-bars">
+              {Object.entries([...(masked?.vault.keys() ?? [])].reduce<Record<string, number>>((a, id) => { const k = id.replace(/_\d+$/, ""); a[k] = (a[k] ?? 0) + 1; return a; }, {}))
+                .sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k, n]) => (
+                  <div key={k} className="kind-row"><span>{k.replace(/_/g, " ").toLowerCase()}</span>
+                    <i><motion.b initial={{ width: 0 }} animate={{ width: `${Math.min(100, n * 34)}%` }} transition={{ type: "spring", stiffness: 140, damping: 20 }} /></i><em>{n}</em></div>
+                ))}
+            </div>
+          </div>
+          <div className="pane bento-card">
+            <RiskCard result={result} suggestions={suggestions}
+              onMask={(q) => setAccept((a) => [...a, q])} onKeep={(q) => setDismissed((d) => [...d, q])} />
+          </div>
+          <div className="pane bento-card">
+            <p className="eyebrow">Hybrid split</p>
+            <HybridSplit result={result} cloudMs={answer?.ms} />
+          </div>
+        </motion.section>
+      )}
 
       {text && (
         <section className="ask liquid">

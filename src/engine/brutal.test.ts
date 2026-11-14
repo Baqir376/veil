@@ -240,6 +240,18 @@ describe("obfuscation decoding", () => {
   });
 });
 
+describe("landing page game: Veil's answer key", () => {
+  it("rules alone catch every secret in the Beat Veil message, and nothing else", async () => {
+    const { GAME_MESSAGE, GAME_SECRETS } = await import("../site/gameMessage");
+    const r = await runVeil(GAME_MESSAGE, { regions: ["IN"], detector: null });
+    const masked = mask(GAME_MESSAGE, r.spans).masked;
+    for (const s of GAME_SECRETS) expect(masked, s).not.toContain(s);
+    expect(r.spans.length).toBe(GAME_SECRETS.length);
+    expect(masked).toContain("HDFC");
+    expect(masked).toContain("Friday");
+  });
+});
+
 describe("robustness", () => {
   it("freeze: a failing on-device step degrades instead of hanging or crashing", async () => {
     const broken: Detector = {

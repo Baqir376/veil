@@ -120,7 +120,16 @@ export function RiskCard({ result, suggestions, onMask, onKeep }: {
   result: VeilResult; suggestions: Clue[]; onMask: (q: string) => void; onKeep: (q: string) => void;
 }) {
   if (result.mode === "rules-only") {
-    return <div className="risk risk-unknown"><strong>Guess Who skipped</strong> — needs on-device AI.</div>;
+    return (
+      <div className="risk risk-unknown">
+        <div className="risk-head"><strong>Guess Who</strong><span className="badge" style={{ color: "var(--muted)" }}>NOT RUN</span></div>
+        <RiskGauge level="unknown" />
+        <p className="small muted" style={{ margin: 0 }}>
+          Guess Who is an on-device attacker (Gemini Nano) that tries to identify the person from what's left.
+          This browser has no on-device model, so only rules ran — check the cloud view for names and clues before sending.
+        </p>
+      </div>
+    );
   }
   const rounds = result.rounds;
   if (rounds.length === 0) {
@@ -139,9 +148,7 @@ export function RiskCard({ result, suggestions, onMask, onKeep }: {
         <strong>Guess Who:</strong> could a stranger work out who this is?
         <span className="badge">{level.toUpperCase()}</span>
       </div>
-      <div className="meter" aria-hidden>
-        <i style={{ width: level === "low" ? "12%" : level === "medium" ? "55%" : "90%", background: level === "low" ? "var(--ok)" : level === "medium" ? "var(--warn)" : "var(--bad)" }} />
-      </div>
+      <RiskGauge level={level} />
       <p className="small muted">
         An on-device attacker tried to identify the person from the masked text and found {first} clue{first === 1 ? "" : "s"}.
         {" "}{rounds.length > 1 ? `Veil masked the specific ones and checked again. ` : ""}
@@ -205,6 +212,89 @@ export function Burst() {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: k * 0.01 }} />
       ))}
     </span>
+  );
+}
+
+/** Spring-physics tabs: the active pill slides between options. */
+export function Tabs<T extends string>({ value, options, onChange }: { value: T; options: { id: T; label: string; count?: number }[]; onChange: (v: T) => void }) {
+  return (
+    <div className="tabs" role="tablist">
+      {options.map((o) => (
+        <button key={o.id} role="tab" aria-selected={value === o.id} className={value === o.id ? "on" : ""} onClick={() => onChange(o.id)}>
+          {value === o.id && <motion.span layoutId="tab-pill" className="tab-pill" transition={{ type: "spring", stiffness: 500, damping: 35 }} />}
+          <span className="tab-label">{o.label}{o.count !== undefined && <i>{o.count}</i>}</span>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * The vault, made tangible: one tile per hidden value. The face shows the tag the cloud receives;
+ * hover (or focus/tap) flips it in 3D to the real value, which never leaves this device.
+ */
+export function VaultTiles({ vault }: { vault: Map<string, string> }) {
+  const entries = [...vault.entries()];
+  if (!entries.length) return <div className="doc muted">Nothing held back yet.</div>;
+  return (
+    <div className="vault-grid">
+      {entries.map(([id, value], i) => {
+        const label = id.replace(/_\d+$/, "").replace(/_/g, " ").toLowerCase();
+        const n = id.match(/_(\d+)$/)?.[1];
+        return (
+          <motion.button key={id} className="vtile" initial={{ opacity: 0, y: 14, rotateX: -30 }} animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            transition={{ delay: Math.min(i, 16) * 0.035, type: "spring", stiffness: 260, damping: 22 }} title="Hover to reveal — stays on this device">
+            <span className="vtile-inner">
+              <span className="vtile-face front"><b>{label}</b><em>{n}</em><small>sent to cloud</small></span>
+              <span className="vtile-face back"><b>{value}</b><small>🔒 only on this device</small></span>
+            </span>
+          </motion.button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Semicircle gauge with a spring needle: re-identification risk after Guess Who. */
+export function RiskGauge({ level }: { level: "low" | "medium" | "high" | "unknown" }) {
+  const angle = level === "low" ? -62 : level === "medium" ? 0 : level === "high" ? 62 : -85;
+  const color = level === "low" ? "var(--ok)" : level === "medium" ? "var(--warn)" : level === "high" ? "var(--bad)" : "var(--muted)";
+  return (
+    <svg viewBox="0 0 120 70" className="gauge" aria-label={`Re-identification risk: ${level}`}>
+      <defs>
+        <linearGradient id="gg" x1="0" x2="1">
+          <stop offset="0" stopColor="#0f7b5f" /><stop offset=".5" stopColor="#ffc21a" /><stop offset="1" stopColor="#c63a1f" />
+        </linearGradient>
+      </defs>
+      <path d="M12 62 A48 48 0 0 1 108 62" fill="none" stroke="rgb(22 21 15 / .08)" strokeWidth="10" strokeLinecap="round" />
+      <path d="M12 62 A48 48 0 0 1 108 62" fill="none" stroke="url(#gg)" strokeWidth="10" strokeLinecap="round" opacity=".85" />
+      <motion.g style={{ originX: "60px", originY: "62px" }} initial={{ rotate: -85 }} animate={{ rotate: angle }}
+        transition={{ type: "spring", stiffness: 70, damping: 9 }}>
+        <line x1="60" y1="62" x2="60" y2="22" stroke="var(--ink)" strokeWidth="3" strokeLinecap="round" />
+      </motion.g>
+      <circle cx="60" cy="62" r="6" fill="var(--ink)" />
+      <circle cx="60" cy="62" r="2.5" fill={color} />
+    </svg>
+  );
+}
+
+/** Where the time went: on-device stages vs the single cloud call. The hybrid split, made visible. */
+export function HybridSplit({ result, cloudMs }: { result: VeilResult; cloudMs?: number }) {
+  const device = result.stages.filter((s) => !s.failed).reduce((a, s) => a + s.ms, 0);
+  const total = device + (cloudMs ?? 0) || 1;
+  const fmt = (ms: number) => (ms < 1000 ? `${Math.round(ms)} ms` : `${(ms / 1000).toFixed(1)} s`);
+  return (
+    <div className="split">
+      <div className="split-bar">
+        <motion.span className="seg-d" initial={{ width: 0 }} animate={{ width: `${(device / total) * 100}%` }} transition={{ type: "spring", stiffness: 120, damping: 20 }} />
+        {cloudMs !== undefined && <motion.span className="seg-c" initial={{ width: 0 }} animate={{ width: `${(cloudMs / total) * 100}%` }} transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.15 }} />}
+      </div>
+      <div className="split-legend">
+        <span><i className="d" /> on this device <b>{fmt(device)}</b></span>
+        <span><i className="c" /> cloud <b>{cloudMs !== undefined ? fmt(cloudMs) : "not yet"}</b></span>
+      </div>
+      <p className="small muted">{result.mode === "full" ? "Detection: Gemini Nano (ONLY_ON_DEVICE) + rules" : "Detection: rules only (safe mode)"} · reasoning: Gemini (ONLY_IN_CLOUD)</p>
+    </div>
   );
 }
 

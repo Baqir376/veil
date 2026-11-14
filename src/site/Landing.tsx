@@ -5,7 +5,8 @@ import { VeilLoop, PipelineStory } from "./demos";
 import { PrivacyLens } from "./lens";
 import { LiquidGlassDefs } from "./liquid";
 import { HeroVisual } from "./HeroVisual";
-import { Aurora, FloatingTokens, ScrollRail } from "./ambient";
+import { BeatVeil } from "./game";
+import { Aurora, ScrollRail } from "./ambient";
 
 
 const STUDIO = "/app/";
@@ -20,7 +21,7 @@ function Nav() {
         initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
         <a href="#top" className="flex items-center gap-2 font-semibold tracking-tight"><VeilMark size={22} />Veil</a>
         <div className="hidden items-center gap-1 text-sm text-mist md:flex">
-          {[["Lens", "#lens"], ["How it works", "#how"], ["Proof", "#proof"], ["Research", "#research"], ["Who it's for", "#who"]].map(([l, h]) => (
+          {[["Play", "#play"], ["Lens", "#lens"], ["How it works", "#how"], ["Proof", "#proof"], ["Research", "#research"], ["Who it's for", "#who"]].map(([l, h]) => (
             <a key={h} href={h} className="rounded-full px-3 py-1.5 transition-colors hover:bg-black/5 hover:text-fog">{l}</a>
           ))}
         </div>
@@ -287,17 +288,17 @@ export function Landing() {
     <div className="grain relative isolate">
       <LiquidGlassDefs />
       <Aurora />
-      <FloatingTokens />
       <IntroLoader />
       <CursorLight />
       <Nav />
       <ScrollRail sections={[
-        { id: "top", label: "Intro" }, { id: "lens", label: "Lens" }, { id: "how", label: "How it works" },
+        { id: "top", label: "Intro" }, { id: "play", label: "Beat Veil" }, { id: "lens", label: "Lens" }, { id: "how", label: "How it works" },
         { id: "proof", label: "Proof" }, { id: "research", label: "Research" }, { id: "who", label: "Who it's for" },
       ]} />
       <main className="relative z-10">
         <Hero />
         <Marquee />
+        <BeatVeil />
         <LensSection />
         <section id="how"><PipelineStory /></section>
         <Proof />

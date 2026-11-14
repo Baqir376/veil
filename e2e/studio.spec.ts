@@ -46,6 +46,19 @@ test.describe("Veil Studio (safe mode: no on-device model in the test browser)",
     expect(errors.filter((e) => !ignorable(e))).toEqual([]);
   });
 
+  test("vault tab: one flip tile per held-back value; the back shows the real value", async ({ page }) => {
+    await page.goto("/app/");
+    await page.getByRole("button", { name: /Income-tax notice/ }).click();
+    await expect(page.locator(".pane.cloud .chip").first()).toBeVisible();
+    await expect(page.locator(".stages .done").first()).toBeVisible();
+    const tab = page.getByRole("tab", { name: /Vault/ });
+    const count = Number((await tab.innerText()).match(/\d+/)![0]);
+    await tab.click();
+    await expect(page.locator(".vtile")).toHaveCount(count);
+    await expect(page.locator(".vtile .back").filter({ hasText: "BQRPM4821K" })).toHaveCount(1);
+    await expect(page.locator(".bento .big-number")).toContainText(String(count));
+  });
+
   test("clicking a highlight keeps that value visible, clicking again masks it", async ({ page }) => {
     await page.goto("/app/");
     await page.getByRole("button", { name: /Income-tax notice/ }).click();
