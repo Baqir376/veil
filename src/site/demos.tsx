@@ -1,6 +1,6 @@
 // Animated explainers: the live "veil" loop and the scroll-driven pipeline story.
-import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence, useInView } from "motion/react";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Scramble } from "./effects";
 
 type Seg = string | { real: string; tag: string; hint?: string };
@@ -104,21 +104,11 @@ const STEPS = [
   { k: "04", title: "Only tags reach the cloud", body: "Gemini in the cloud does the thinking with [person 1] and [amount 1 · ₹15–20L]. Your real values come back — on your device only.", tint: "#2a44e8" },
 ];
 
-const STEP_MS = 4200;
-
-/** The four stages, auto-playing when in view (Apple-style feature carousel). Hover pauses; click selects. */
+/** The four stages. You're in control: hover (or tap / focus) a step to see it — no timers. */
 export function PipelineStory() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { margin: "-25% 0px -25% 0px" });
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  useEffect(() => {
-    if (!inView || paused) return;
-    const t = setTimeout(() => setActive((a) => (a + 1) % STEPS.length), STEP_MS);
-    return () => clearTimeout(t);
-  }, [inView, paused, active]);
   return (
-    <div ref={ref} className="relative py-28" onPointerEnter={() => setPaused(true)} onPointerLeave={() => setPaused(false)}>
+    <div className="relative py-28">
       <div className="flex items-center">
         <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-2 md:px-8">
           <div className="flex flex-col justify-center gap-3">
@@ -126,26 +116,23 @@ export function PipelineStory() {
             <h2 className="text-4xl font-semibold tracking-tight md:text-5xl">Four checks.<br /><span className="font-serif italic text-device">One</span> round-trip.</h2>
             <ol className="mt-6 flex flex-col gap-2">
               {STEPS.map((s, i) => (
-                <li key={s.k} className={`relative cursor-pointer overflow-hidden rounded-2xl p-4 transition-all ${i === active ? "glass-soft" : "hover:bg-black/[.03]"}`}
-                  onClick={() => setActive(i)}>
+                <li key={s.k} className={`relative cursor-pointer overflow-hidden rounded-2xl transition-all ${i === active ? "glass-soft" : "hover:bg-black/[.03]"}`}
+                  onPointerEnter={() => setActive(i)}>
                   {i === active && <motion.span layoutId="step-bar" className="absolute left-0 top-0 h-full w-[3px]" style={{ background: s.tint }} />}
-                  {i === active && (
-                    <motion.span key={`p${active}-${paused}`} aria-hidden className="absolute bottom-0 left-0 h-[2px] origin-left" style={{ background: s.tint, width: "100%" }}
-                      initial={{ scaleX: 0 }} animate={{ scaleX: paused || !inView ? 0 : 1 }} transition={{ duration: paused || !inView ? 0.2 : STEP_MS / 1000, ease: "linear" }} />
-                  )}
-                  <div className="flex gap-4">
+                  <button type="button" aria-pressed={i === active} onClick={() => setActive(i)} onFocus={() => setActive(i)}
+                    className="flex w-full gap-4 rounded-2xl p-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-fog">
                     <span className="font-mono text-sm" style={{ color: i === active ? s.tint : "#6b665c" }}>{s.k}</span>
-                    <div>
-                      <p className={`font-medium ${i === active ? "text-fog" : "text-mist"}`}>{s.title}</p>
+                    <span className="block">
+                      <span className={`block font-medium ${i === active ? "text-fog" : "text-mist"}`}>{s.title}</span>
                       <AnimatePresence initial={false}>
                         {i === active && (
-                          <motion.p className="mt-1 text-sm leading-relaxed text-mist" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
+                          <motion.span className="mt-1 block overflow-hidden text-sm leading-relaxed text-mist" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
                             {s.body}
-                          </motion.p>
+                          </motion.span>
                         )}
                       </AnimatePresence>
-                    </div>
-                  </div>
+                    </span>
+                  </button>
                 </li>
               ))}
             </ol>
