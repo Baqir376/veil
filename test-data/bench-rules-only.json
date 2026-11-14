@@ -1,0 +1,1390 @@
+{
+  "when": "2026-11-14T12:02:29.879Z",
+  "cases": 113,
+  "summary": [
+    {
+      "category": "clean",
+      "cases": 16,
+      "recall": 0.8181818181818182,
+      "utility": 1,
+      "leakFreeCases": 8,
+      "avgMs": 7
+    },
+    {
+      "category": "run-on",
+      "cases": 8,
+      "recall": 0.6666666666666666,
+      "utility": 1,
+      "leakFreeCases": 0,
+      "avgMs": 4
+    },
+    {
+      "category": "conversational",
+      "cases": 8,
+      "recall": 0.5,
+      "utility": 1,
+      "leakFreeCases": 0,
+      "avgMs": 4
+    },
+    {
+      "category": "abbreviations",
+      "cases": 8,
+      "recall": 1,
+      "utility": 1,
+      "leakFreeCases": 8,
+      "avgMs": 10
+    },
+    {
+      "category": "typos",
+      "cases": 8,
+      "recall": 0.5,
+      "utility": 1,
+      "leakFreeCases": 0,
+      "avgMs": 2
+    },
+    {
+      "category": "code-switched",
+      "cases": 8,
+      "recall": 0.4,
+      "utility": 1,
+      "leakFreeCases": 0,
+      "avgMs": 2
+    },
+    {
+      "category": "ambiguous-names",
+      "cases": 8,
+      "recall": 0,
+      "utility": 1,
+      "leakFreeCases": 0,
+      "avgMs": 0
+    },
+    {
+      "category": "obfuscated",
+      "cases": 16,
+      "recall": 0.8,
+      "utility": 1,
+      "leakFreeCases": 12,
+      "avgMs": 2
+    },
+    {
+      "category": "structured",
+      "cases": 12,
+      "recall": 1,
+      "utility": 1,
+      "leakFreeCases": 12,
+      "avgMs": 10
+    },
+    {
+      "category": "quasi",
+      "cases": 8,
+      "recall": 0,
+      "utility": 1,
+      "leakFreeCases": 0,
+      "avgMs": 0
+    },
+    {
+      "category": "eu-uk",
+      "cases": 8,
+      "recall": 0.6,
+      "utility": 1,
+      "leakFreeCases": 0,
+      "avgMs": 3
+    },
+    {
+      "category": "negative",
+      "cases": 5,
+      "recall": 1,
+      "utility": 1,
+      "leakFreeCases": 5,
+      "avgMs": 0
+    },
+    {
+      "category": "ALL",
+      "cases": 113,
+      "recall": 0.696969696969697,
+      "utility": 1,
+      "leakFreeCases": 45,
+      "avgMs": 4
+    }
+  ],
+  "results": [
+    {
+      "id": "clean-1-1",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 2,
+      "ms": 27,
+      "degraded": false
+    },
+    {
+      "id": "clean-1-2",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 2,
+      "ms": 12,
+      "degraded": false
+    },
+    {
+      "id": "clean-1-3",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 2,
+      "ms": 9,
+      "degraded": false
+    },
+    {
+      "id": "clean-1-4",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 2,
+      "ms": 8,
+      "degraded": false
+    },
+    {
+      "id": "clean-2-1",
+      "category": "clean",
+      "leaked": [
+        "Gurpreet Singh"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 5,
+      "degraded": false
+    },
+    {
+      "id": "clean-2-2",
+      "category": "clean",
+      "leaked": [
+        "Kabir Menon"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "clean-2-3",
+      "category": "clean",
+      "leaked": [
+        "Vihaan Menon"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "clean-2-4",
+      "category": "clean",
+      "leaked": [
+        "Gurpreet Rao"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "clean-3-1",
+      "category": "clean",
+      "leaked": [
+        "Ayaan Khan"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "clean-3-2",
+      "category": "clean",
+      "leaked": [
+        "Omkar Chopra"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "clean-3-3",
+      "category": "clean",
+      "leaked": [
+        "Pallavi Pillai"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "clean-3-4",
+      "category": "clean",
+      "leaked": [
+        "Vihaan Chopra"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "clean-4-1",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 5,
+      "degraded": false
+    },
+    {
+      "id": "clean-4-2",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "clean-4-3",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "clean-4-4",
+      "category": "clean",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "run-on-1-1",
+      "category": "run-on",
+      "leaked": [
+        "reyansh nair"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "run-on-1-2",
+      "category": "run-on",
+      "leaked": [
+        "isha bhat"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "run-on-1-3",
+      "category": "run-on",
+      "leaked": [
+        "vihaan iyer"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "run-on-1-4",
+      "category": "run-on",
+      "leaked": [
+        "saanvi joshi"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "run-on-2-1",
+      "category": "run-on",
+      "leaked": [
+        "Vivaan Desai"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "run-on-2-2",
+      "category": "run-on",
+      "leaked": [
+        "Meera Singh"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "run-on-2-3",
+      "category": "run-on",
+      "leaked": [
+        "Omkar Fernandes"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "run-on-2-4",
+      "category": "run-on",
+      "leaked": [
+        "Farhan Singh"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "conversational-1-1",
+      "category": "conversational",
+      "leaked": [
+        "Tanmay Iyer"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 13,
+      "degraded": false
+    },
+    {
+      "id": "conversational-1-2",
+      "category": "conversational",
+      "leaked": [
+        "Arjun Rao"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "conversational-1-3",
+      "category": "conversational",
+      "leaked": [
+        "Vihaan Iyer"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 4,
+      "degraded": false
+    },
+    {
+      "id": "conversational-1-4",
+      "category": "conversational",
+      "leaked": [
+        "Reyansh Rao"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "conversational-2-1",
+      "category": "conversational",
+      "leaked": [
+        "Kiara Kulkarni"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "conversational-2-2",
+      "category": "conversational",
+      "leaked": [
+        "Pallavi Bhat"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "conversational-2-3",
+      "category": "conversational",
+      "leaked": [
+        "Vihaan Shah"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "conversational-2-4",
+      "category": "conversational",
+      "leaked": [
+        "Reyansh Patel"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-1-1",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-1-2",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 5,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-1-3",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-1-4",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 5,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-2-1",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 13,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-2-2",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 14,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-2-3",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 15,
+      "degraded": false
+    },
+    {
+      "id": "abbreviations-2-4",
+      "category": "abbreviations",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 13,
+      "degraded": false
+    },
+    {
+      "id": "typos-1-1",
+      "category": "typos",
+      "leaked": [
+        "Ananay Meonn"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "typos-1-2",
+      "category": "typos",
+      "leaked": [
+        "Reyanhs Sihna"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "typos-1-3",
+      "category": "typos",
+      "leaked": [
+        "Fahran Chpora"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "typos-1-4",
+      "category": "typos",
+      "leaked": [
+        "Ayaan Rao"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "typos-2-1",
+      "category": "typos",
+      "leaked": [
+        "Kiara Deshpande"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "typos-2-2",
+      "category": "typos",
+      "leaked": [
+        "Nikhil Pillai"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "typos-2-3",
+      "category": "typos",
+      "leaked": [
+        "Tanmay Nair"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "typos-2-4",
+      "category": "typos",
+      "leaked": [
+        "Ananya Reddy"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 2,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-1-1",
+      "category": "code-switched",
+      "leaked": [
+        "Lakshmi",
+        "Banjara Hills"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-1-2",
+      "category": "code-switched",
+      "leaked": [
+        "Gurpreet",
+        "Andheri East"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-1-3",
+      "category": "code-switched",
+      "leaked": [
+        "Reyansh",
+        "Ratnagiri"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-1-4",
+      "category": "code-switched",
+      "leaked": [
+        "Pallavi",
+        "Navrangpura"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-2-1",
+      "category": "code-switched",
+      "leaked": [
+        "Kabir Deshpande"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-2-2",
+      "category": "code-switched",
+      "leaked": [
+        "Reyansh Deshpande"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-2-3",
+      "category": "code-switched",
+      "leaked": [
+        "Isha Gupta"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "code-switched-2-4",
+      "category": "code-switched",
+      "leaked": [
+        "Myra Sinha"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-1-1",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Faith Reddy"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 2,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-1-2",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Ruby Kulkarni"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 2,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-1-3",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Sunny Khan"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 2,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-1-4",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Ruby Reddy"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 2,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-2-1",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Rose"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-2-2",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Joy"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-2-3",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Hope"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "ambiguous-names-2-4",
+      "category": "ambiguous-names",
+      "leaked": [
+        "Summer"
+      ],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-1-1",
+      "category": "obfuscated",
+      "leaked": [
+        "Aarav Gupta"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-1-2",
+      "category": "obfuscated",
+      "leaked": [
+        "Shruti Nair"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-1-3",
+      "category": "obfuscated",
+      "leaked": [
+        "Saanvi Singh"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-1-4",
+      "category": "obfuscated",
+      "leaked": [
+        "Arjun Deshpande"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-2-1",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-2-2",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-2-3",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-2-4",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-3-1",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-3-2",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-3-3",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-3-4",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-4-1",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-4-2",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-4-3",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "obfuscated-4-4",
+      "category": "obfuscated",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 1,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "structured-1-1",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 6,
+      "keepTotal": 1,
+      "ms": 17,
+      "degraded": false
+    },
+    {
+      "id": "structured-1-2",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 6,
+      "keepTotal": 1,
+      "ms": 15,
+      "degraded": false
+    },
+    {
+      "id": "structured-1-3",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 6,
+      "keepTotal": 1,
+      "ms": 18,
+      "degraded": false
+    },
+    {
+      "id": "structured-1-4",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 6,
+      "keepTotal": 1,
+      "ms": 13,
+      "degraded": false
+    },
+    {
+      "id": "structured-2-1",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 7,
+      "degraded": false
+    },
+    {
+      "id": "structured-2-2",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "structured-2-3",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "structured-2-4",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 0,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "structured-3-1",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 6,
+      "degraded": false
+    },
+    {
+      "id": "structured-3-2",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 10,
+      "degraded": false
+    },
+    {
+      "id": "structured-3-3",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 9,
+      "degraded": false
+    },
+    {
+      "id": "structured-3-4",
+      "category": "structured",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 4,
+      "keepTotal": 1,
+      "ms": 7,
+      "degraded": false
+    },
+    {
+      "id": "quasi-1-1",
+      "category": "quasi",
+      "leaked": [
+        "only female cardiologist",
+        "Chiplun"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "quasi-1-2",
+      "category": "quasi",
+      "leaked": [
+        "only female cardiologist",
+        "Dapoli"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "quasi-1-3",
+      "category": "quasi",
+      "leaked": [
+        "only Michelin-trained chef",
+        "Kudal"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "quasi-1-4",
+      "category": "quasi",
+      "leaked": [
+        "only deaf chartered accountant",
+        "Malvan"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "quasi-2-1",
+      "category": "quasi",
+      "leaked": [
+        "Dapoli",
+        "Parkinson's"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "quasi-2-2",
+      "category": "quasi",
+      "leaked": [
+        "Sawantwadi",
+        "Parkinson's"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "quasi-2-3",
+      "category": "quasi",
+      "leaked": [
+        "Alibag",
+        "Parkinson's"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "quasi-2-4",
+      "category": "quasi",
+      "leaked": [
+        "Sawantwadi",
+        "Parkinson's"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 0,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-1-1",
+      "category": "eu-uk",
+      "leaked": [
+        "Elena Novak"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 7,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-1-2",
+      "category": "eu-uk",
+      "leaked": [
+        "Jonas Jansen"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 5,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-1-3",
+      "category": "eu-uk",
+      "leaked": [
+        "Lucas Jansen"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-1-4",
+      "category": "eu-uk",
+      "leaked": [
+        "Sofia Hoffmann"
+      ],
+      "overMasked": [],
+      "mustTotal": 3,
+      "keepTotal": 2,
+      "ms": 3,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-2-1",
+      "category": "eu-uk",
+      "leaked": [
+        "Ines Schneider"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 2,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-2-2",
+      "category": "eu-uk",
+      "leaked": [
+        "Clara Jansen"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-2-3",
+      "category": "eu-uk",
+      "leaked": [
+        "Lucas Kowalski"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "eu-uk-2-4",
+      "category": "eu-uk",
+      "leaked": [
+        "Lucas Jansen"
+      ],
+      "overMasked": [],
+      "mustTotal": 2,
+      "keepTotal": 1,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "negative-1-1",
+      "category": "negative",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 0,
+      "keepTotal": 3,
+      "ms": 1,
+      "degraded": false
+    },
+    {
+      "id": "negative-2-1",
+      "category": "negative",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 0,
+      "keepTotal": 3,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "negative-3-1",
+      "category": "negative",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 0,
+      "keepTotal": 4,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "negative-4-1",
+      "category": "negative",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 0,
+      "keepTotal": 3,
+      "ms": 0,
+      "degraded": false
+    },
+    {
+      "id": "negative-5-1",
+      "category": "negative",
+      "leaked": [],
+      "overMasked": [],
+      "mustTotal": 0,
+      "keepTotal": 1,
+      "ms": 0,
+      "degraded": false
+    }
+  ]
+}

@@ -4,6 +4,10 @@ import { SAMPLES } from "../samples";
 import { runVeil, riskOf, mask, rehydrate, recall, maskOptionsFor, buildCloudPayload, type VeilResult, type RegionId } from "../engine";
 import { availability, warmUp, detectDirect, askCloud, hasPromptApi, nanoDetector } from "../nano";
 import { appCheckEnabled } from "../firebase";
+import { buildBenchmark } from "../bench/cases";
+import { scoreCase, summarise, type CaseResult } from "../bench/score";
+
+const BENCH = buildBenchmark();
 
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T;
 
@@ -46,6 +50,16 @@ $("#app").innerHTML = `
     <div id="cloud-meta" class="muted"></div>
   </section>
   <section class="card" id="bench-card" hidden><h2>Benchmark</h2><div id="bench"></div></section>
+  <section class="card">
+    <h2>Research benchmark — ${BENCH.length} synthetic cases × 12 categories</h2>
+    <p class="muted">Categories follow the robustness taxonomy of <em>Mind the Gap</em> (arXiv 2609.03464) plus obfuscation, structured,
+      quasi-identifier and negative cases. Recall = private items that never reach the cloud. Utility = domain terms the cloud still sees.
+      Scored on the exact payload the app would send (leak gate included). Takes roughly 10–15 minutes on-device.</p>
+    <div class="row"><button id="run-research" class="primary">Run research benchmark (rules vs. Veil)</button>
+      <button id="dl-research" disabled>Download results JSON</button></div>
+    <div id="research-progress" class="muted"></div>
+    <div id="research"></div>
+  </section>
 `;
 
 const sampleSel = $<HTMLSelectElement>("#sample");
@@ -143,6 +157,47 @@ $<HTMLButtonElement>("#run-all").onclick = (e) => guard(e.currentTarget as HTMLB
     $("#bench").innerHTML = `<table><thead>${head}</thead><tbody>${rows.join("")}</tbody></table>`;
   }
 });
+
+let researchJson = "";
+$<HTMLButtonElement>("#run-research").onclick = (e) => guard(e.currentTarget as HTMLButtonElement, async () => {
+  const rules: CaseResult[] = [];
+  const veil: CaseResult[] = [];
+  const t0 = performance.now();
+  for (const c of BENCH) rules.push(await scoreCase(c, null));
+  for (let i = 0; i < BENCH.length; i++) {
+    veil.push(await scoreCase(BENCH[i], nanoDetector));
+    const done = i + 1;
+    const eta = Math.round(((performance.now() - t0) / done) * (BENCH.length - done) / 1000);
+    $("#research-progress").textContent = `${done}/${BENCH.length} cases · ~${Math.floor(eta / 60)}m ${eta % 60}s left`;
+    if (done % 5 === 0 || done === BENCH.length) renderResearch(rules, veil);
+  }
+  researchJson = JSON.stringify({ when: new Date().toISOString(), userAgent: navigator.userAgent, rules: summarise(rules), veil: summarise(veil), results: veil }, null, 2);
+  $<HTMLButtonElement>("#dl-research").disabled = false;
+});
+
+function renderResearch(rules: CaseResult[], veil: CaseResult[]) {
+  const sr = summarise(rules.filter((r) => veil.some((v) => v.id === r.id)));
+  const sv = summarise(veil);
+  const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
+  const rows = sv.map((v) => {
+    const r = sr.find((x) => x.category === v.category)!;
+    const strong = v.category === "ALL" ? " style=\"font-weight:700\"" : "";
+    return `<tr${strong}><td>${v.category}</td><td>${v.cases}</td><td>${pct(r.recall)}</td><td>${pct(v.recall)}</td><td>${pct(v.utility)}</td><td>${v.leakFreeCases}/${v.cases}</td><td>${v.avgMs} ms</td></tr>`;
+  }).join("");
+  const leaks = veil.filter((v) => v.leaked.length).slice(0, 25)
+    .map((v) => `<li><code>${esc(v.id)}</code> leaked: ${v.leaked.map(esc).join(" · ")}</li>`).join("");
+  const over = veil.filter((v) => v.overMasked.length)
+    .map((v) => `<li><code>${esc(v.id)}</code> over-masked: ${v.overMasked.map(esc).join(" · ")}</li>`).join("");
+  $("#research").innerHTML = `<table><thead><tr><th>Category</th><th>Cases</th><th>Recall · rules only</th><th>Recall · Veil (Nano)</th><th>Utility</th><th>Leak-free cases</th><th>Avg time</th></tr></thead><tbody>${rows}</tbody></table>
+    ${leaks ? `<h2>Remaining leaks</h2><ul>${leaks}</ul>` : ""}${over ? `<h2>Over-masking</h2><ul>${over}</ul>` : ""}`;
+}
+
+$<HTMLButtonElement>("#dl-research").onclick = () => {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([researchJson], { type: "application/json" }));
+  a.download = `veil-benchmark-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+};
 
 async function refreshStatus() {
   const st = await availability().catch((e) => `error: ${e?.message ?? e}`);

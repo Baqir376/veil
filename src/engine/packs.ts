@@ -84,14 +84,16 @@ COMMON.rules.push(
   { kind: "PERSON", category: "PERSON", strong: false,
     re: new RegExp(String.raw`"(?:name|full_?name|first_?name|last_?name|customer|client|patient|employee|contact|holder|owner)"\s*:\s*"(${NAME})"`, "giu"), group: 1 },
   { kind: "PERSON", category: "PERSON",
-    re: new RegExp(String.raw`(?:^|\n)[ \t]*(?:From|To|Cc|Bcc|Attn|Name|Client|Customer|Patient|Pt|Employee|Applicant|Tenant|Account holder|Holder|Beneficiary|Assessee)[ \t]*[:\-][ \t]*(${NAME})`, "gu"), group: 1 },
+    re: new RegExp(String.raw`(?:^|\n|[|;]|\.\s)[ \t]*(?:From|To|Cc|Bcc|Attn|Name|Nm|Client|Cust|Customer|Patient|Pt|Employee|Emp|Applicant|Tenant|Account holder|Holder|Beneficiary|Assessee|Taxpayer)[ \t]*[:\-]?[ \t]+(${NAME})`, "giu"), group: 1 },
+  { kind: "ORG", category: "ORG",
+    re: /\b(?:\p{Lu}[\p{L}&.'’-]*\s+){0,4}\p{Lu}[\p{L}&.'’-]*\s+(?:&\s+\p{Lu}[\p{L}]+\s+)?(?:GmbH|AG|KG|Ltd\.?|Limited|LLP|LLC|Inc\.?|Pvt\.?\s+Ltd\.?|Private Limited|SARL|SAS|Srl|S\.p\.A\.|BV|NV|plc)\b/gu },
   { kind: "PERSON", category: "PERSON",
     re: new RegExp(String.raw`\b(?:Dear|Hi|Hello|Regards,?|Sincerely,?|Thanks,?)[ \t]+(${NAME})`, "gu"), group: 1 },
   { kind: "PERSON", category: "PERSON",
     re: new RegExp(String.raw`\b(?:Mr|Mrs|Ms|Miss|Dr|Prof|Shri|Smt|Sri|Kumari|Herr|Frau|Mme)\.?[ \t]+(${NAME})`, "gu"), group: 1 },
 );
-// "PERSON" rule spans should get a plain PERSON placeholder, not a kind-specific one.
-for (const r of COMMON.rules) if (r.kind === "PERSON") r.kind = "";
+// Name/org rule spans should get a plain PERSON / ORG placeholder, not a kind-specific one.
+for (const r of COMMON.rules) if (r.kind === "PERSON" || r.kind === "ORG") r.kind = "";
 
 export const IN: Pack = {
   id: "IN",
@@ -264,8 +266,9 @@ export function modelView(text: string): string {
 
 // ---------- structured (CSV / spreadsheet) ----------
 const AMOUNT_HEADER = /salary|income|amount|ctc|pay|wage|balance|turnover|revenue|price|fee|bonus|rent/i;
+const NAME_HEADER = /^(?:name|full ?name|first ?name|last ?name|customer|client|employee|emp(?:loyee)? ?name|patient|tenant|contact|holder|nominee|beneficiary)$/i;
 
-/** In pasted CSV/TSV, mask numeric cells under amount-like column headers. */
+/** In pasted CSV/TSV, mask numeric cells under amount-like headers and names under name-like headers. */
 export function tableAmountSpans(text: string): Span[] {
   const lines = text.split("\n");
   const spans: Span[] = [];
@@ -275,16 +278,19 @@ export function tableAmountSpans(text: string): Span[] {
     const counts = lines.map((l) => l.split(delim).length - 1);
     for (let h = 0; h < lines.length; h++) {
       if (counts[h] < 1) continue;
-      const cols = lines[h].split(delim).map((c) => c.trim());
+      const cols = lines[h].split(delim).map((c) => c.trim().replace(/^"|"$/g, ""));
       const amountCols = cols.map((c, i) => (AMOUNT_HEADER.test(c) && !/\d/.test(c) ? i : -1)).filter((i) => i >= 0);
-      if (!amountCols.length) continue;
+      const nameCols = cols.map((c, i) => (NAME_HEADER.test(c) ? i : -1)).filter((i) => i >= 0);
+      if (!amountCols.length && !nameCols.length) continue;
       for (let r = h + 1; r < lines.length && counts[r] === counts[h]; r++) {
         let pos = starts[r];
         lines[r].split(delim).forEach((cell, i) => {
-          const trimmed = cell.trim();
+          const trimmed = cell.trim().replace(/^"|"$/g, "");
+          const s = pos + cell.indexOf(trimmed);
           if (amountCols.includes(i) && /^[₹$€£]?\s?\d[\d,.]*$/.test(trimmed)) {
-            const s = pos + cell.indexOf(trimmed);
             spans.push({ start: s, end: s + trimmed.length, text: trimmed, category: "AMOUNT", source: "rule", kind: "AMOUNT", origin: "table:AMOUNT" });
+          } else if (nameCols.includes(i) && /\p{L}/u.test(trimmed) && trimmed.length >= 2) {
+            spans.push({ start: s, end: s + trimmed.length, text: trimmed, category: "PERSON", source: "rule", origin: "table:PERSON" });
           }
           pos += cell.length + delim.length;
         });
