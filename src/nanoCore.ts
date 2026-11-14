@@ -102,7 +102,11 @@ let directModel: GenerativeModel, indirectModel: GenerativeModel, attackModel: G
  * Bind the models to a Firebase AI Logic instance. The web app passes one with App Check; the Chrome
  * extension passes one without (it only makes ONLY_ON_DEVICE calls, which never touch the network).
  */
+let boundAI: AI | null = null;
+let cloudModelName = "gemini-3.5-flash-lite";
+
 export function bindAI(ai: AI) {
+  boundAI = ai;
   directModel = deviceTask(ai, [msg("system", DIRECT_SYSTEM)], DIRECT_SCHEMA);
   indirectModel = deviceTask(ai,
     [msg("system", INDIRECT_SYSTEM), msg("user", INDIRECT_EXAMPLE_IN), msg("assistant", INDIRECT_EXAMPLE_OUT)],
@@ -112,9 +116,19 @@ export function bindAI(ai: AI) {
   /** Reasoning over already-masked text: ONLY_IN_CLOUD. */
   cloudModel = getGenerativeModel(ai, {
     mode: InferenceMode.ONLY_IN_CLOUD,
-    inCloudParams: { model: "gemini-3.5-flash-lite", systemInstruction: CLOUD_SYSTEM },
+    inCloudParams: { model: cloudModelName, systemInstruction: CLOUD_SYSTEM },
   });
 }
+/** Apply Remote Config values: the cloud model name and the on-device timeout. */
+export function configure(o: { cloudModel?: string; deviceTimeoutMs?: number }) {
+  if (o.deviceTimeoutMs && o.deviceTimeoutMs >= 3000) deviceTimeoutMs = o.deviceTimeoutMs;
+  if (o.cloudModel && o.cloudModel !== cloudModelName) {
+    cloudModelName = o.cloudModel;
+    if (boundAI) bindAI(boundAI);
+  }
+}
+export const currentCloudModel = () => cloudModelName;
+
 export function hasPromptApi(): boolean {
   return typeof LanguageModel !== "undefined";
 }
@@ -131,7 +145,7 @@ export function warmUp(onProgress: (pct: number) => void) {
 
 /** No on-device call may hang the app: give up after this long and let the pipeline degrade gracefully. */
 // Benchmark (113 cases): normal on-device calls finish in 1–10 s; stalls are clustered and unbounded.
-const DEVICE_TIMEOUT_MS = 20_000;
+let deviceTimeoutMs = 20_000;
 
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
@@ -155,7 +169,7 @@ async function run<T>(model: GenerativeModel, prompt: string) {
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const result = await withTimeout(model.generateContent(prompt), DEVICE_TIMEOUT_MS, "On-device step");
+      const result = await withTimeout(model.generateContent(prompt), deviceTimeoutMs, "On-device step");
       return {
         data: parseJson<T>(result.response.text()),
         ms: Math.round(performance.now() - t0),

@@ -1,0 +1,24 @@
+{
+  "parameters": {
+    "cloud_model": {
+      "defaultValue": { "value": "gemini-3.5-flash-lite" },
+      "description": "Cloud Gemini model used for reasoning over masked text (ONLY_IN_CLOUD).",
+      "valueType": "STRING"
+    },
+    "device_timeout_ms": {
+      "defaultValue": { "value": "20000" },
+      "description": "Timeout for each on-device Gemini Nano call before Veil degrades to rules + review.",
+      "valueType": "NUMBER"
+    },
+    "max_attack_rounds": {
+      "defaultValue": { "value": "2" },
+      "description": "Maximum Guess Who attacker rounds per document.",
+      "valueType": "NUMBER"
+    },
+    "never_mask_extra": {
+      "defaultValue": { "value": "[]" },
+      "description": "JSON array of extra domain terms that must never be masked (e.g. new tax form names).",
+      "valueType": "JSON"
+    }
+  }
+}

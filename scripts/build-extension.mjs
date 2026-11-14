@@ -34,3 +34,16 @@ if (testBuild) manifest.content_scripts[0].matches.push("http://localhost:5173/e
 writeFileSync(`${out}/manifest.json`, JSON.stringify(manifest, null, 2));
 cpSync("extension/icons", `${out}/icons`, { recursive: true });
 console.log(`✓ Extension built → ${out}  (Studio link: ${studio})`);
+
+// --zip: package for download from the hosted site (public/downloads/veil-extension.zip).
+if (process.argv.includes("--zip")) {
+  const { execSync } = await import("node:child_process");
+  mkdirSync("public/downloads", { recursive: true });
+  rmSync("public/downloads/veil-extension.zip", { force: true });
+  try {
+    execSync(`tar -a -c -f ../../public/downloads/veil-extension.zip *`, { cwd: out, stdio: "inherit", shell: true });
+    console.log("✓ Zipped → public/downloads/veil-extension.zip");
+  } catch {
+    console.warn("⚠ Could not zip with `tar -a` on this system — zip extension/dist manually.");
+  }
+}

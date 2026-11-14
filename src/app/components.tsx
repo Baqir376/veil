@@ -215,6 +215,46 @@ export function Burst() {
   );
 }
 
+/** Slide-over list of the signed-in user's receipts (Firestore). Counts and hashes only. */
+export function HistoryDrawer({ uid, open, onClose }: { uid: string; open: boolean; onClose: () => void }) {
+  const [items, setItems] = useState<Receipt[] | null>(null);
+  const [err, setErr] = useState("");
+  useEffect(() => {
+    if (!open) return;
+    setItems(null); setErr("");
+    import("../cloud").then((c) => c.listReceipts(uid)).then(setItems).catch((e) => setErr(String(e?.message ?? e)));
+  }, [open, uid]);
+  return (
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div className="drawer-scrim" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose} />
+          <motion.aside className="drawer" initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", stiffness: 320, damping: 34 }}
+            role="dialog" aria-label="Your privacy receipts">
+            <div className="drawer-head"><h2>Your privacy receipts</h2><button className="ghost" onClick={onClose}>Close</button></div>
+            <p className="small muted">Stored in Firestore under your account: counts, stages and a SHA-256 of what was sent. Never the values themselves.</p>
+            {err && <p className="error">{err}</p>}
+            {!items && !err && <p className="muted">Loading…</p>}
+            {items?.length === 0 && <p className="muted">No receipts yet — ask the cloud something in Studio.</p>}
+            <ul className="history">
+              {items?.map((r) => {
+                const total = Object.values(r.heldBack).reduce((a, b) => a + b, 0);
+                return (
+                  <li key={r.id}>
+                    <div><b>{total}</b> values held back <span className="muted small">· {r.region} · {r.mode === "full" ? "Nano + rules" : "rules only"}</span></div>
+                    <div className="small muted">{new Date(r.createdAt).toLocaleString()} · sha256 <span className="mono">{r.payloadSha256.slice(0, 12)}…</span></div>
+                    <div className="kinds">{Object.entries(r.heldBack).map(([k, n]) => <span key={k} className="chip">{k.replace(/_/g, " ").toLowerCase()} × {n}</span>)}</div>
+                  </li>
+                );
+              })}
+            </ul>
+          </motion.aside>
+        </>
+      )}
+    </AnimatePresence>
+  );
+}
+
 /** Spring-physics tabs: the active pill slides between options. */
 export function Tabs<T extends string>({ value, options, onChange }: { value: T; options: { id: T; label: string; count?: number }[]; onChange: (v: T) => void }) {
   return (

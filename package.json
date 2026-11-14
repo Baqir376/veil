@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "test:all": "vitest run && playwright test",
-    "build:ext": "node scripts/build-extension.mjs"
+    "build:ext": "node scripts/build-extension.mjs",
+    "deploy": "node scripts/build-extension.mjs --zip --studio=https://veil-hybrid.web.app/app/ && npm run build && npx firebase-tools deploy"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

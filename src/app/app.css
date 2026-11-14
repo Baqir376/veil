@@ -319,3 +319,19 @@ select, .pill { background: rgb(255 255 255 / .6); backdrop-filter: blur(10px); 
 .split-legend i.d { background: var(--marker); box-shadow: 0 0 0 1px var(--ink); }
 .split-legend i.c { background: var(--cloud); }
 .split-legend b { font-family: "Geist Mono", monospace; font-weight: 600; color: var(--ink); }
+
+/* Account, history drawer */
+.account { display: inline-flex; gap: 6px; align-items: center; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--ink); padding: 0; overflow: hidden; background: var(--marker); font-weight: 700; cursor: pointer; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.drawer-scrim { position: fixed; inset: 0; background: rgb(22 21 15 / .25); backdrop-filter: blur(2px); z-index: 40; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100vw); z-index: 41; padding: 20px; overflow: auto;
+  background: linear-gradient(180deg, rgb(255 253 248 / .96), rgb(250 245 235 / .94)); border-left: 1.5px solid var(--ink);
+  box-shadow: -30px 0 60px -30px rgb(22 21 15 / .5); backdrop-filter: blur(18px); }
+.drawer-head { display: flex; justify-content: space-between; align-items: center; }
+.drawer-head h2 { margin: 0; font-family: "Fraunces", serif; font-size: 1.3rem; }
+.history { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 10px; }
+.history li { padding: 12px; border-radius: 14px; background: rgb(255 255 255 / .7); box-shadow: 0 0 0 1px rgb(22 21 15 / .08); }
+.history .kinds { margin: 8px 0 0; }
+.history .chip { color: var(--marker); background: var(--ink); }
+.save-note { margin: 8px 0 0; }

@@ -335,6 +335,11 @@ export function protectedRanges(text: string, packs: Pack[]): { start: number; e
   return out;
 }
 
+/** Add never-mask terms at runtime (served by Remote Config), e.g. a newly introduced tax form name. */
+export function extendNeverMask(terms: string[]) {
+  for (const t of terms) if (t.trim() && !COMMON.neverMask.includes(t.trim())) COMMON.neverMask.push(t.trim());
+}
+
 export function neverMaskTerms(packs: Pack[]): string[] {
   return [...new Set(packs.flatMap((p) => p.neverMask))];
 }

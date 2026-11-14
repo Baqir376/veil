@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  runVeil, applyDecisions, mask, rehydrate, maskOptionsFor, spanKey, buildCloudPayload,
+  runVeil, applyDecisions, extendNeverMask, mask, rehydrate, maskOptionsFor, spanKey, buildCloudPayload,
   type VeilResult, type RegionId, type Span,
 } from "../engine";
-import { availability, detectDirect, askCloud, nanoDetector } from "../nano";
+import { availability, detectDirect, askCloud, nanoDetector, configure, currentCloudModel } from "../nano";
+import { loadSettings, watchUser, signInWithGoogle, signOutUser, saveReceipt, DEFAULT_SETTINGS, type Settings } from "../cloud";
+import type { User } from "firebase/auth";
 import { SAMPLES } from "../samples";
 import { buildReceipt, type Receipt } from "./receipt";
-import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide, RestoredView, Tabs, VaultTiles, HybridSplit } from "./components";
+import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide, RestoredView, Tabs, VaultTiles, HybridSplit, HistoryDrawer } from "./components";
 import { CursorLight, VeilMark, TiltCard } from "../site/effects";
 import { LiquidGlassDefs } from "../site/liquid";
 import { Aurora } from "../site/ambient";
@@ -95,6 +97,18 @@ export function App() {
   const [sending, setSending] = useState(false);
   const [reviewed, setReviewed] = useState(false);
   const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [settings, setSettings] = useState<Settings & { source: "remote" | "default" }>({ ...DEFAULT_SETTINGS, source: "default" });
+  const [user, setUser] = useState<User | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [saved, setSaved] = useState<"" | "saving" | "saved" | "error">("");
+
+  // Remote Config (cloud model, timeout, never-mask terms) and the signed-in user.
+  useEffect(() => {
+    loadSettings().then((s) => { configure(s); extendNeverMask(s.neverMaskExtra); setSettings(s); });
+    let off: (() => void) | undefined;
+    watchUser(setUser).then((u) => { off = u; }).catch(() => {});
+    return () => off?.();
+  }, []);
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState(true);
   const [tab, setTab] = useState<"cloud" | "vault">("cloud");
@@ -115,7 +129,7 @@ export function App() {
     const t = setTimeout(() => {
       runVeil(text, {
         regions: [region],
-        detector: safeMode ? null : nanoDetector,
+        detector: safeMode ? null : nanoDetector, maxRounds: settings.maxAttackRounds,
         onUpdate: (r) => { if (id === runId.current) setResult(r); },
       }).then((r) => { if (id === runId.current) setResult(r); })
         .catch((e) => { if (id === runId.current) setError(String(e?.message ?? e)); });
@@ -156,7 +170,10 @@ export function App() {
       const r = rehydrate(cloud.text, built.vault, built.reserved);
       setAnswer({ raw: cloud.text, restored: r.text, invented: r.invented, ms: cloud.ms, source: cloud.source, maskedQuestion: built.maskedQuestion,
         gateAutoMasked: built.gate.autoMasked, vault: built.vault, reserved: built.reserved });
-      setReceipt(await buildReceipt({ result, vault: built.vault, payload: built.payload, cloudSource: cloud.source, invented: r.invented, region, gateAutoMasked: built.gate.autoMasked.length }));
+      const rc = await buildReceipt({ result, vault: built.vault, payload: built.payload, cloudSource: cloud.source, invented: r.invented, region,
+        gateAutoMasked: built.gate.autoMasked.length, cloudModel: currentCloudModel(), settings: settings.source });
+      setReceipt(rc);
+      if (user) { setSaved("saving"); saveReceipt(user.uid, rc).then(() => setSaved("saved")).catch(() => setSaved("error")); } else setSaved("");
     } catch (e: any) {
       setError(friendlyCloudError(e));
     } finally {
@@ -196,6 +213,16 @@ export function App() {
             {REGIONS.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
           </select>
           <ModelPill state={model} />
+          {user ? (
+            <span className="account">
+              <button className="ghost" onClick={() => setHistoryOpen(true)} title="Your privacy receipts (counts and hashes only)">History</button>
+              <button className="avatar" onClick={() => signOutUser()} title={`Signed in as ${user.email ?? "you"} — click to sign out`}>
+                {user.photoURL ? <img src={user.photoURL} alt="" referrerPolicy="no-referrer" /> : (user.displayName ?? "U").slice(0, 1)}
+              </button>
+            </span>
+          ) : (
+            <button className="ghost" onClick={() => signInWithGoogle().catch((e) => setError(`Sign-in failed: ${e?.message ?? e}`))}>Sign in to keep receipts</button>
+          )}
         </div>
       </header>
 
@@ -368,11 +395,18 @@ export function App() {
             </div>
           )}
           {receipt && <ReceiptCard receipt={receipt} />}
+          {receipt && (
+            <p className="small muted save-note">
+              {user ? (saved === "saving" ? "Saving this receipt to your history…" : saved === "saved" ? "✓ Saved to your history (counts and hash only)." : saved === "error" ? "Couldn't save to your history." : "")
+                : "Sign in to keep a history of receipts — only counts and hashes are stored."}
+            </p>
+          )}
         </section>
       )}
 
+      {user && <HistoryDrawer uid={user.uid} open={historyOpen} onClose={() => setHistoryOpen(false)} />}
       <footer className="foot muted small">
-        Veil · on-device Gemini Nano + cloud Gemini via Firebase AI Logic · <a href="/">home</a> · <a href="/spike.html">benchmark</a>
+        Veil · on-device Gemini Nano + cloud Gemini ({currentCloudModel()}, {settings.source === "remote" ? "Remote Config" : "defaults"}) via Firebase AI Logic · <a href="/">home</a> · <a href="/spike.html">benchmark</a>
       </footer>
     </div>
     </>

@@ -10,7 +10,7 @@ export interface Receipt {
   /** How many values of each kind were held back on the device. */
   heldBack: Record<string, number>;
   onDevice: { stage: string; source?: string; ms: number; failed?: boolean }[];
-  cloud: { source?: string; model: string };
+  cloud: { source?: string; model: string; settings?: "remote" | "default" };
   /** SHA-256 of exactly what was sent (masked question + masked document). Lets anyone verify the payload later. */
   payloadSha256: string;
   payloadChars: number;
@@ -27,7 +27,7 @@ async function sha256(s: string): Promise<string> {
 
 export async function buildReceipt(args: {
   result: VeilResult; vault: Map<string, string>; payload: string;
-  cloudSource?: string; invented: string[]; region: RegionId; gateAutoMasked: number;
+  cloudSource?: string; invented: string[]; region: RegionId; gateAutoMasked: number; cloudModel: string; settings: "remote" | "default";
 }): Promise<Receipt> {
   const heldBack: Record<string, number> = {};
   for (const id of args.vault.keys()) {
@@ -43,7 +43,7 @@ export async function buildReceipt(args: {
     degraded: args.result.degraded,
     heldBack,
     onDevice: args.result.stages.map((s) => ({ stage: s.stage, source: s.source, ms: s.ms, failed: s.failed })),
-    cloud: { source: args.cloudSource, model: "gemini-3.5-flash-lite" },
+    cloud: { source: args.cloudSource, model: args.cloudModel, settings: args.settings },
     payloadSha256: await sha256(args.payload),
     payloadChars: args.payload.length,
     residualClues: last?.visible ?? 0,

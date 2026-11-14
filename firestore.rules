@@ -1,0 +1,29 @@
+rules_version = '2';
+
+// Veil stores ONLY privacy receipts: counts, stage timings and a SHA-256 of the payload.
+// No personal value can be written: documents may contain only these fields, the hash must be a
+// 64-char hex string, and receipts are immutable once written.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/receipts/{rid} {
+      function isOwner() { return request.auth != null && request.auth.uid == uid; }
+      function validReceipt() {
+        let d = request.resource.data;
+        return d.keys().hasOnly(['id', 'createdAt', 'region', 'mode', 'degraded', 'heldBack', 'onDevice', 'cloud',
+                                 'payloadSha256', 'payloadChars', 'residualClues', 'inventedPlaceholders', 'leakGate', 'savedAt'])
+          && d.id == rid
+          && d.payloadSha256 is string && d.payloadSha256.matches('^[0-9a-f]{64}$')
+          && d.region in ['IN', 'EU', 'UK', 'US']
+          && d.mode in ['full', 'rules-only']
+          && d.heldBack is map && d.heldBack.size() <= 40
+          && d.payloadChars is int && d.residualClues is int;
+      }
+      allow read, delete: if isOwner();
+      allow create: if isOwner() && validReceipt();
+      allow update: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
