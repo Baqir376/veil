@@ -84,7 +84,7 @@ COMMON.rules.push(
   { kind: "PERSON", category: "PERSON", strong: false,
     re: new RegExp(String.raw`"(?:name|full_?name|first_?name|last_?name|customer|client|patient|employee|contact|holder|owner)"\s*:\s*"(${NAME})"`, "giu"), group: 1 },
   { kind: "PERSON", category: "PERSON",
-    re: new RegExp(String.raw`(?:^|\n|[|;]|\.\s)[ \t]*(?:From|To|Cc|Bcc|Attn|Name|Nm|Client|Cust|Customer|Patient|Pt|Employee|Emp|Applicant|Tenant|Account holder|Holder|Beneficiary|Assessee|Taxpayer)[ \t]*[:\-]?[ \t]+(${NAME})`, "giu"), group: 1 },
+    re: new RegExp(String.raw`(?:^|\n|[|;]|\.\s)[ \t"'“‘(\[>*-]*(?:From|To|Cc|Bcc|Attn|Name|Nm|Client|Cust|Customer|Patient|Pt|Employee|Emp|Applicant|Tenant|Account holder|Holder|Beneficiary|Assessee|Taxpayer)[ \t]*[:\-]?[ \t]+(${NAME})`, "giu"), group: 1 },
   { kind: "ORG", category: "ORG",
     re: /\b(?:\p{Lu}[\p{L}&.'’-]*\s+){0,4}\p{Lu}[\p{L}&.'’-]*\s+(?:&\s+\p{Lu}[\p{L}]+\s+)?(?:GmbH|AG|KG|Ltd\.?|Limited|LLP|LLC|Inc\.?|Pvt\.?\s+Ltd\.?|Private Limited|SARL|SAS|Srl|S\.p\.A\.|BV|NV|plc)\b/gu },
   { kind: "PERSON", category: "PERSON",

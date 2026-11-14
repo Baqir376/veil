@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
@@ -18,4 +19,6 @@ export default defineConfig({
       },
     },
   },
+  // Unit, integration, property-based and security tests run in Vitest; browser tests live in e2e/ (Playwright).
+  test: { include: ["src/**/*.test.ts", "tests/**/*.test.ts"] },
 });

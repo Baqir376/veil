@@ -197,7 +197,7 @@ reason  = getGenerativeModel(ai, { mode: `}<span className="text-[#9db0ff]">ONLY
 result.response.inferenceSource  `}<span className="text-[#a7a294]">// "on_device" | "in_cloud"</span></pre>
           </div>
         </TiltCard>
-        <TiltCard className="md:col-span-3" glow="#e8492c">
+        <TiltCard className="md:col-span-3" glow="#c63a1f">
           <div className="p-7">
             <p className="text-sm text-mist">Fail-closed leak gate</p>
             <p className="mt-3 text-lg leading-snug">Right before sending, the exact payload is re-scanned. If any hidden value would still leave the device, <span className="text-coral">nothing is sent.</span></p>

@@ -98,9 +98,9 @@ export function VeilLoop() {
 }
 
 const STEPS = [
-  { k: "01", title: "Rules catch every ID", body: "In 2 ms, region rule packs find PAN, Aadhaar, IBAN, cards, keys — even hidden in Cyrillic look-alikes, full-width digits or “[at] gmail [dot] com”.", tint: "#b57a00" },
+  { k: "01", title: "Rules catch every ID", body: "In 2 ms, region rule packs find PAN, Aadhaar, IBAN, cards, keys — even hidden in Cyrillic look-alikes, full-width digits or “[at] gmail [dot] com”.", tint: "#8a5d00" },
   { k: "02", title: "Gemini Nano reads like a human", body: "On your device, Gemini Nano finds names, places and the quiet giveaways regex can't: “the only female cardiologist in Ratnagiri”.", tint: "#0f7b5f" },
-  { k: "03", title: "Guess Who attacks it", body: "A second on-device pass plays detective. Whatever it can still infer about the person — location, job, family — gets masked too.", tint: "#e8492c" },
+  { k: "03", title: "Guess Who attacks it", body: "A second on-device pass plays detective. Whatever it can still infer about the person — location, job, family — gets masked too.", tint: "#c63a1f" },
   { k: "04", title: "Only tags reach the cloud", body: "Gemini in the cloud does the thinking with [person 1] and [amount 1 · ₹15–20L]. Your real values come back — on your device only.", tint: "#2a44e8" },
 ];
 
@@ -122,7 +122,7 @@ export function PipelineStory() {
                 <li key={s.k} className="relative overflow-hidden rounded-2xl p-4 transition-colors" style={{ background: i === active ? "rgb(255 255 255 / .05)" : "transparent" }}>
                   {i === active && <motion.span layoutId="step-bar" className="absolute left-0 top-0 h-full w-[3px]" style={{ background: s.tint }} />}
                   <div className="flex gap-4">
-                    <span className="font-mono text-sm" style={{ color: i === active ? s.tint : "#8b867a" }}>{s.k}</span>
+                    <span className="font-mono text-sm" style={{ color: i === active ? s.tint : "#6b665c" }}>{s.k}</span>
                     <div>
                       <p className={`font-medium ${i === active ? "text-fog" : "text-mist"}`}>{s.title}</p>
                       <AnimatePresence initial={false}>
@@ -208,10 +208,10 @@ function Detective() {
       <div className="mt-4 flex items-center gap-3 text-xs text-mist">
         Re-identification risk
         <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-black/10">
-          <motion.div className="absolute inset-y-0 left-0 rounded-full" initial={{ width: "85%", backgroundColor: "#e8492c" }}
+          <motion.div className="absolute inset-y-0 left-0 rounded-full" initial={{ width: "85%", backgroundColor: "#c63a1f" }}
             animate={{ width: "12%", backgroundColor: "#0f7b5f" }} transition={{ delay: 1.9, duration: 1, ease: [0.16, 1, 0.3, 1] }} />
         </div>
-        <motion.span initial={{ color: "#e8492c" }} animate={{ color: "#0f7b5f" }} transition={{ delay: 1.9 }}>LOW</motion.span>
+        <motion.span initial={{ color: "#c63a1f" }} animate={{ color: "#0f7b5f" }} transition={{ delay: 1.9 }}>LOW</motion.span>
       </div>
     </div>
   );

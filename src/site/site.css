@@ -12,12 +12,12 @@
   --color-line: #d9d2c3;     /* hairlines */
   --color-fog: #16150f;      /* ink — primary text */
   --color-mist: #55524a;     /* secondary text */
-  --color-dim: #8b867a;      /* tertiary text */
+  --color-dim: #6b665c;      /* tertiary text (≥ 4.5:1 on paper, WCAG AA) */
   --color-device: #0f7b5f;   /* on-device / safe (forest) */
   --color-cloud: #2a44e8;    /* cloud (cobalt) */
   --color-veil: #16150f;     /* the redaction bar */
-  --color-coral: #e8492c;    /* risk (tomato) */
-  --color-amber: #b57a00;    /* rules (dark ochre, readable) */
+  --color-coral: #c63a1f;    /* risk (tomato) */
+  --color-amber: #8a5d00;    /* rules (dark ochre, readable) */
   --color-marker: #ffc21a;   /* highlighter */
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;

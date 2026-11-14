@@ -14,10 +14,10 @@ import { LiquidGlassDefs } from "../site/liquid";
 export type ModelState = "checking" | "warming" | "ready" | "safe" | "downloadable";
 
 const REGIONS: { id: RegionId; label: string }[] = [
-  { id: "IN", label: "🇮🇳 India · DPDP" },
-  { id: "EU", label: "🇪🇺 EU · GDPR" },
-  { id: "UK", label: "🇬🇧 UK · UK GDPR" },
-  { id: "US", label: "🇺🇸 US" },
+  { id: "IN", label: "India · DPDP" },
+  { id: "EU", label: "EU · GDPR" },
+  { id: "UK", label: "UK · UK GDPR" },
+  { id: "US", label: "United States" },
 ];
 
 interface Answer {
@@ -214,7 +214,7 @@ export function App() {
               <motion.div key={s.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.07, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
                 <TiltCard className="h-full" max={9} glow={s.region === "IN" ? "#0f7b5f" : s.region === "EU" ? "#ffc21a" : "#2a44e8"}>
                   <button className="sample-card" onClick={() => { setRegion(s.region); setText(s.text); setEditing(false); }}>
-                    <span className="flag">{s.label.split(" ")[0]}</span>
+                    <span className="region-badge">{s.region}</span>
                     <strong>{s.label.split(" ").slice(1).join(" ")}</strong>
                     <span className="snip">{s.text.replace(/\s+/g, " ").slice(0, 140)}…</span>
                     <span className="go">Try this sample →</span>
