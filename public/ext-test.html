@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- Mock AI chat page for the extension's Playwright tests. Behaves like ChatGPT's composer:
+     a contenteditable box whose own paste handler inserts plain text, and a message list. -->
+<html lang="en">
+  <head><meta charset="UTF-8" /><title>Mock chat</title>
+    <style>body{font-family:system-ui;margin:0;padding:24px;background:#fafafa}#messages{min-height:200px}#prompt-textarea{border:1px solid #ccc;border-radius:12px;padding:12px;min-height:60px;margin-top:340px;background:#fff}.msg{padding:8px 0}</style>
+  </head>
+  <body>
+    <div id="messages"></div>
+    <div id="prompt-textarea" contenteditable="true" role="textbox"></div>
+    <script>
+      const ed = document.getElementById("prompt-textarea");
+      ed.addEventListener("paste", (e) => {
+        e.preventDefault();
+        const t = e.clipboardData.getData("text/plain");
+        ed.textContent += t;
+        window.__pasted = (window.__pasted || []).concat(t);
+      });
+      window.addAssistant = (text) => {
+        const d = document.createElement("div");
+        d.className = "msg"; d.textContent = text;
+        document.getElementById("messages").appendChild(d);
+      };
+    </script>
+  </body>
+</html>

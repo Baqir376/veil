@@ -20,5 +20,5 @@ export default defineConfig({
     },
   },
   // Unit, integration, property-based and security tests run in Vitest; browser tests live in e2e/ (Playwright).
-  test: { include: ["src/**/*.test.ts", "tests/**/*.test.ts"] },
+  test: { include: ["src/**/*.test.ts", "tests/**/*.test.ts", "extension/src/**/*.test.ts"] },
 });

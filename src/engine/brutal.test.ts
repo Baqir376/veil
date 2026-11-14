@@ -158,6 +158,7 @@ describe("name backup when the model fails (B14)", () => {
     ["Dear Rohan Mehta, please find attached.", "Rohan Mehta"],
     ["Referred by Dr. Sameer Kulkarni yesterday.", "Sameer Kulkarni"],
     ["Client: Kabir Rao, Andheri East", "Kabir Rao"],
+    ["please see the notice for Client: Rohan Mehta, PAN BQRPM4821K.", "Rohan Mehta"],
   ])("%s → masks %s without the model", async (text, name) => {
     const r = await runVeil(text, { regions: ["IN"], detector: broken });
     expect(mask(text, r.spans).masked).not.toContain(name);

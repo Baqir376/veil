@@ -247,11 +247,14 @@ export class SpanTools {
   propagate(text: string, spans: Span[]): Span[] {
     const extra: Span[] = [];
     const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const add = (needle: string, s: Span, alias?: string) => {
+    const add = (needle: string, s: Span, alias?: string, isPart = false) => {
       const re = new RegExp(`(?<![\\p{L}\\p{N}])${esc(needle)}(?![\\p{L}\\p{N}])`, "gu");
       for (const m of text.matchAll(re)) {
         const start = m.index!, end = start + m[0].length;
         if (spans.some((x) => x.start <= start && x.end >= end)) continue;
+        // A lone name part ("Mehta") that sits next to another capitalised word belongs to a
+        // DIFFERENT full name ("Rohan Mehta" vs "Sneha Mehta") — don't link it to this person.
+        if (isPart && (/\p{Lu}[\p{L}'’.-]*[ \t]+$/u.test(text.slice(Math.max(0, start - 30), start)) || /^[ \t]+\p{Lu}/u.test(text.slice(end, end + 3)))) continue;
         extra.push({ start, end, text: m[0], category: s.category, source: "nano", origin: "propagated", alias });
       }
     };
@@ -276,7 +279,7 @@ export class SpanTools {
       if (parts.length < 2) continue;
       for (const p of parts) {
         if (p.length < 3 || HONORIFICS.has(p.toLowerCase()) || this.stop.has(p.toLowerCase()) || !/^\p{Lu}/u.test(p)) continue;
-        add(p, s, full);
+        add(p, s, full, true);
       }
     }
     return extra;

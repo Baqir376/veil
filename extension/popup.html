@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Veil</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; width: 340px; font-family: ui-sans-serif, -apple-system, "Segoe UI", Inter, sans-serif; color: #16150f;
+        background: radial-gradient(400px 200px at 0% 0%, rgb(255 194 26 / .25), transparent 70%), linear-gradient(rgb(22 21 15 / .045) 1px, transparent 1px) 0 0 / 100% 28px, #f4efe6; }
+      .wrap { padding: 16px; }
+      header { display: flex; align-items: center; gap: 10px; }
+      .logo { width: 30px; height: 30px; border-radius: 9px; background: #16150f; display: grid; place-items: center; }
+      h1 { margin: 0; font-family: Georgia, serif; font-size: 20px; font-weight: 600; }
+      .tag { margin: 2px 0 0; font-size: 11.5px; color: #625e55; }
+      .card { margin-top: 12px; padding: 12px; border-radius: 14px; background: rgb(255 253 248 / .85); border: 1px solid #fff;
+        box-shadow: 0 0 0 1px rgb(22 21 15 / .08), 0 12px 30px -18px rgb(22 21 15 / .4); }
+      .lbl { font-family: ui-monospace, Consolas, monospace; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #625e55; margin: 0 0 6px; }
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; margin: 4px 0; }
+      .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; background: #8b867a; }
+      .dot.ok { background: #0f7b5f; } .dot.warn { background: #ffc21a; }
+      .big { font-family: Georgia, serif; font-size: 34px; font-weight: 600; line-height: 1; }
+      button, select { font: inherit; font-size: 13px; border-radius: 10px; border: 1.5px solid #16150f; background: #fff; color: #16150f; padding: 7px 11px; cursor: pointer; }
+      button.primary { background: #16150f; color: #fffdf8; box-shadow: 3px 3px 0 #ffc21a; width: 100%; margin-top: 8px; }
+      progress { width: 100%; height: 8px; margin-top: 8px; }
+      .sites { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+      .site { font-size: 11.5px; padding: 3px 8px; border-radius: 999px; background: #16150f; color: #ffc21a; }
+      a { color: #2a44e8; font-size: 12.5px; }
+      footer { display: flex; justify-content: space-between; margin-top: 12px; }
+      .muted { color: #625e55; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <span class="logo"><svg width="20" height="20" viewBox="0 0 64 64" fill="none"><path d="M10 22c7 0 12 5 22 5s15-5 22-5" stroke="#f4efe6" stroke-width="7" stroke-linecap="round"/><path d="M10 40c7 0 12 5 22 5s15-5 22-5" stroke="#ffc21a" stroke-width="7" stroke-linecap="round"/></svg></span>
+        <div><h1>Veil</h1><p class="tag">Your secrets stay here. AI gets the tags.</p></div>
+      </header>
+
+      <div class="card">
+        <p class="lbl">On-device AI</p>
+        <div class="row"><span><span class="dot" id="d1"></span>Gemini Nano in Chrome</span><b id="nano">checking…</b></div>
+        <div class="row"><span><span class="dot" id="d2"></span>Detector (Firebase AI Logic)</span><b id="off">checking…</b></div>
+        <button class="primary" id="prep" hidden>Prepare Gemini Nano</button>
+        <progress id="prog" max="100" value="0" hidden></progress>
+        <p class="muted" id="hint"></p>
+      </div>
+
+      <div class="card">
+        <p class="lbl">Protected so far</p>
+        <div class="row"><span class="big" id="total">0</span><span class="muted">values never reached the AI</span></div>
+        <div class="sites" id="sites"></div>
+      </div>
+
+      <div class="card">
+        <p class="lbl">ID rules for</p>
+        <select id="region" style="width:100%">
+          <option value="IN">India · PAN, Aadhaar, GSTIN, UPI…</option>
+          <option value="EU">EU · IBAN, VAT…</option>
+          <option value="UK">UK · NI, NHS…</option>
+          <option value="US">US · SSN, EIN…</option>
+        </select>
+        <p class="muted" style="margin:8px 0 0">Strong IDs from every region are always checked.</p>
+      </div>
+
+      <footer><span class="muted">Works on ChatGPT · Gemini · Claude</span><a id="studio" href="#" target="_blank">Open Veil Studio ↗</a></footer>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

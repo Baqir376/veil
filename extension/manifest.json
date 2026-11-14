@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Veil — private AI for ChatGPT, Gemini & Claude",
+  "short_name": "Veil",
+  "version": "0.1.0",
+  "description": "Hides names, IDs and tell-tale details on your device with Gemini Nano before ChatGPT, Gemini or Claude sees them — then shows the real values back, only on your screen.",
+  "minimum_chrome_version": "138",
+  "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "action": { "default_popup": "popup.html", "default_title": "Veil", "default_icon": { "16": "icons/16.png", "48": "icons/48.png" } },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "permissions": ["offscreen", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*", "https://gemini.google.com/*", "https://claude.ai/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
