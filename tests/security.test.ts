@@ -14,7 +14,7 @@ it("no private keys, service-account JSON or long-lived secrets in tracked sourc
   const patterns = [/-----BEGIN (?:RSA |EC )?PRIVATE KEY-----/, /"type"\s*:\s*"service_account"/, /\bsk-live-[A-Za-z0-9]{20,}/, /\bAKIA[0-9A-Z]{16}\b/, /\bghp_[A-Za-z0-9]{30,}/];
   const offenders: string[] = [];
   for (const f of tracked) {
-    if (!/\.(ts|tsx|js|mjs|json|html|css|md|txt)$/.test(f) || f === "package-lock.json") continue;
+    if (!/\.(ts|tsx|js|mjs|json|html|css|md|txt)$/.test(f) || f === "package-lock.json" || !existsSync(f)) continue;
     const src = readFileSync(f, "utf8");
     // Test fixtures intentionally contain FAKE secrets; they are clearly marked "FAKE".
     for (const p of patterns) if (p.test(src.replace(/sk-live-FAKE\w*/g, ""))) offenders.push(`${f}: ${p}`);

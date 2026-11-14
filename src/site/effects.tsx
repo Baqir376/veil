@@ -74,7 +74,7 @@ export function TiltCard({ children, className = "", max = 10, glow = "#ffc21a" 
   return (
     <div style={{ perspective: 1000 }} className={className}>
       <motion.div ref={ref} data-cursor="hover"
-        className="glass relative h-full overflow-hidden rounded-3xl"
+        className="glass-soft relative h-full overflow-hidden rounded-3xl"
         style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}
         onPointerMove={(e) => {
           const r = ref.current!.getBoundingClientRect();

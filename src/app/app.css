@@ -227,3 +227,49 @@ button.ghost:hover { background: var(--marker); }
 .or-line::before, .or-line::after { content: ""; flex: 1; height: 1.5px; background: var(--line); }
 
 .ask.liquid { border-radius: var(--radius); }
+
+/* ───────────── Premium glass layer (Studio) ─────────────
+   Frosted panels over the living Aurora background, a cursor-following light on each panel's rim,
+   soft depth instead of hard print shadows. */
+.backdrop { display: none; }
+
+.glassy, .pane, .ask, .steps-guide .s, .risk, .receipt-wrap, .top-glass {
+  background: linear-gradient(180deg, rgb(255 253 248 / .74), rgb(255 253 248 / .52));
+  border: 1px solid rgb(255 255 255 / .85);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 0 0 1px rgb(22 21 15 / .07), 0 30px 70px -32px rgb(22 21 15 / .38), 0 8px 18px -10px rgb(22 21 15 / .12);
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+}
+.pane, .ask { border-radius: 22px; transition: transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s; }
+.pane:hover, .ask:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 0 0 1px rgb(22 21 15 / .09), 0 40px 80px -30px rgb(22 21 15 / .45), 0 10px 20px -10px rgb(22 21 15 / .15); }
+.pane.cloud { background: linear-gradient(180deg, rgb(240 243 255 / .78), rgb(240 243 255 / .55)); border-color: rgb(255 255 255 / .85); }
+
+/* Cursor-following rim light */
+.pane::before, .ask::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), var(--rim, rgb(255 194 26)), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.pane.cloud::before { --rim: rgb(42 68 232); }
+.pane:hover::before, .ask:hover::before { opacity: 1; }
+/* Soft inner glow that follows the cursor */
+.pane::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .3s;
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgb(255 194 26 / .10), transparent 45%); }
+.pane.cloud::after { background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgb(42 68 232 / .08), transparent 45%); }
+.pane:hover::after { opacity: 1; }
+
+.doc { background: rgb(255 255 255 / .55); box-shadow: inset 0 0 0 1px rgb(22 21 15 / .06); }
+.input { background: rgb(255 255 255 / .6); }
+.steps-guide .s { border-radius: 16px; }
+.steps-guide .s.on { background: linear-gradient(180deg, rgb(255 246 214 / .92), rgb(255 253 248 / .7)); border-color: rgb(255 255 255 / .9);
+  box-shadow: inset 0 1px 0 #fff, 0 0 0 1.5px var(--ink), 0 24px 50px -24px rgb(22 21 15 / .5); transform: translateY(-3px); }
+.risk { border-radius: 16px; }
+.receipt { box-shadow: 0 30px 60px -30px rgb(22 21 15 / .45), 0 0 0 1px rgb(22 21 15 / .1); border-color: transparent; }
+
+/* Glass header bar */
+.top-glass { position: sticky; top: 10px; z-index: 20; border-radius: 18px; padding: 10px 14px; margin-bottom: 16px; }
+select, .pill { background: rgb(255 255 255 / .6); backdrop-filter: blur(10px); }
+
+.pane.cloud { box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 0 0 1px rgb(42 68 232 / .18), 0 30px 70px -32px rgb(42 68 232 / .35), 0 8px 18px -10px rgb(22 21 15 / .12); }
+.pane.cloud:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / .95), 0 0 0 1px rgb(42 68 232 / .25), 0 40px 80px -30px rgb(42 68 232 / .45), 0 10px 20px -10px rgb(22 21 15 / .15); }
+

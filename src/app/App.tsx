@@ -10,6 +10,7 @@ import { buildReceipt, type Receipt } from "./receipt";
 import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide, RestoredView } from "./components";
 import { CursorLight, VeilMark, TiltCard } from "../site/effects";
 import { LiquidGlassDefs } from "../site/liquid";
+import { Aurora, FloatingTokens } from "../site/ambient";
 
 export type ModelState = "checking" | "warming" | "ready" | "safe" | "downloadable";
 
@@ -62,6 +63,22 @@ function useModel(): ModelState {
     return () => { alive = false; };
   }, []);
   return state;
+}
+
+/** Feeds the cursor position into every glass panel so its rim light follows the mouse. */
+function RimLight() {
+  useEffect(() => {
+    const move = (e: PointerEvent) => {
+      document.querySelectorAll<HTMLElement>(".pane, .ask").forEach((el) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+        el.style.setProperty("--my", `${e.clientY - r.top}px`);
+      });
+    };
+    window.addEventListener("pointermove", move);
+    return () => window.removeEventListener("pointermove", move);
+  }, []);
+  return null;
 }
 
 export function App() {
@@ -159,11 +176,13 @@ export function App() {
 
   return (
     <>
-    <div className="backdrop" aria-hidden />
+    <Aurora intensity={1.1} />
+    <FloatingTokens count={9} />
+    <RimLight />
     <LiquidGlassDefs />
     <CursorLight />
     <div className="shell">
-      <header className="top">
+      <header className="top top-glass">
         <a className="brand" href="/" title="Back to the Veil homepage">
           <VeilMark size={28} />
           <div>
