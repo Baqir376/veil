@@ -1,4 +1,5 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { PLACEHOLDER_RE, riskOf, spanKey, type Span, type VeilResult, type Clue } from "../engine";
 import type { Receipt } from "./receipt";
 import type { ModelState } from "./App";
@@ -68,9 +69,11 @@ export function CloudView({ masked, inline }: { masked: string; inline?: boolean
     const label = id.replace(/_\d+$/, "").replace(/_/g, " ");
     const n = id.match(/_(\d+)$/)?.[1];
     parts.push(
-      <span key={`p${i}`} className="chip" title={m[0]}>
+      <motion.span key={`p${i}-${m[0]}`} className="chip" title={m[0]}
+        initial={{ opacity: 0, scale: 0.6, filter: "blur(4px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+        transition={{ type: "spring", stiffness: 420, damping: 24, delay: Math.min(i, 20) * 0.025 }}>
         {label.toLowerCase()} {n}{hint && <em> · {hint}</em>}
-      </span>,
+      </motion.span>,
     );
     cur = m.index + m[0].length;
     i++;
@@ -135,6 +138,9 @@ export function RiskCard({ result, suggestions, onMask, onKeep }: {
         <strong>Guess Who:</strong> could a stranger work out who this is?
         <span className="badge">{level.toUpperCase()}</span>
       </div>
+      <div className="meter" aria-hidden>
+        <i style={{ width: level === "low" ? "12%" : level === "medium" ? "55%" : "90%", background: level === "low" ? "var(--ok)" : level === "medium" ? "var(--warn)" : "var(--bad)" }} />
+      </div>
       <p className="small muted">
         An on-device attacker tried to identify the person from the masked text and found {first} clue{first === 1 ? "" : "s"}.
         {" "}{rounds.length > 1 ? `Veil masked the specific ones and checked again. ` : ""}
@@ -153,6 +159,61 @@ export function RiskCard({ result, suggestions, onMask, onKeep }: {
           ))}
         </ul>
       )}
+    </div>
+  );
+}
+
+/** 1 Paste → 2 Review → 3 Ask. Always visible so it's obvious what to do next. */
+export function StepGuide({ step, running }: { step: 1 | 2 | 3; running: boolean }) {
+  const items = [
+    { t: "Paste or pick a sample", d: "Your text never leaves this device" },
+    { t: running ? "Veil is checking…" : "Review what's hidden", d: "Click a highlight to keep it visible" },
+    { t: "Ask the cloud", d: "Only tags travel; answers come back real" },
+  ];
+  return (
+    <div className="steps-guide">
+      {items.map((it, i) => {
+        const n = (i + 1) as 1 | 2 | 3;
+        return (
+          <motion.div key={i} layout className={`s ${n === step ? "on" : n < step ? "done" : ""}`}>
+            <b>{n < step ? "✓" : n}</b>
+            <div>{it.t}<small>{it.d}</small></div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** The hybrid boundary, live: device → cloud carries only tags; the answer comes back and is restored locally. */
+export function Channel({ sending, answered, values }: { sending: boolean; answered: boolean; values: number }) {
+  const [online, setOnline] = useState(() => navigator.onLine);
+  useEffect(() => {
+    const on = () => setOnline(true), off = () => setOnline(false);
+    window.addEventListener("online", on); window.addEventListener("offline", off);
+    return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
+  }, []);
+  const label = !online ? "offline — on-device protection still works"
+    : sending ? "sending tags only…" : answered ? "answer restored on this device" : `${values} values will stay here`;
+  return (
+    <div className="channel" aria-live="polite">
+      <span className="node d">● this device</span>
+      <div className={`wire ${online ? "" : "off"}`}>
+        <AnimatePresence>
+          {online && sending && [0, 1, 2].map((k) => (
+            <motion.span key={`up${k}`} className="pkt" style={{ background: "var(--device)", boxShadow: "0 0 14px var(--device)" }}
+              initial={{ left: "0%", opacity: 0 }} animate={{ left: "94%", opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.1, delay: k * 0.25, repeat: Infinity, repeatDelay: 0.3, ease: "easeInOut" }} />
+          ))}
+          {online && answered && !sending && [0, 1].map((k) => (
+            <motion.span key={`down${k}`} className="pkt" style={{ background: "var(--cloud)", boxShadow: "0 0 14px var(--cloud)" }}
+              initial={{ left: "94%", opacity: 0 }} animate={{ left: "0%", opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.1, delay: k * 0.25, ease: "easeInOut" }} />
+          ))}
+        </AnimatePresence>
+      </div>
+      <span className={`node c ${online ? "" : "off"}`}>cloud ●</span>
+      <span className="muted" style={{ minWidth: 220 }}>{label}</span>
     </div>
   );
 }

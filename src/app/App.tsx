@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   runVeil, applyDecisions, mask, rehydrate, maskOptionsFor, spanKey, buildCloudPayload,
   type VeilResult, type RegionId, type Span,
@@ -6,7 +7,8 @@ import {
 import { availability, detectDirect, askCloud, nanoDetector } from "../nano";
 import { SAMPLES } from "../samples";
 import { buildReceipt, type Receipt } from "./receipt";
-import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill } from "./components";
+import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide } from "./components";
+import { CursorLight, VeilMark } from "../site/effects";
 
 export type ModelState = "checking" | "warming" | "ready" | "safe" | "downloadable";
 
@@ -149,23 +151,31 @@ export function App() {
 
   const suggestions = (result?.suggestions ?? []).filter((c) => !accept.includes(c.quote) && !dismissed.includes(c.quote));
 
+  const step: 1 | 2 | 3 = !text ? 1 : answer || sending ? 3 : 2;
+
   return (
+    <>
+    <div className="backdrop" aria-hidden />
+    <CursorLight />
     <div className="shell">
       <header className="top">
-        <div className="brand">
-          <img src="/veil.svg" alt="" width={28} height={28} />
+        <a className="brand" href="/" title="Back to the Veil homepage">
+          <VeilMark size={28} />
           <div>
-            <strong>Veil</strong>
+            <strong>Veil Studio</strong>
             <span className="tag">The cloud gets the thinking. Never your secrets.</span>
           </div>
-        </div>
+        </a>
         <div className="top-right">
+          <a href="/" className="ghost-link small muted">← Home</a>
           <select value={region} onChange={(e) => setRegion(e.target.value as RegionId)} aria-label="Region rules">
             {REGIONS.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
           </select>
           <ModelPill state={model} />
         </div>
       </header>
+
+      <StepGuide step={step} running={running} />
 
       {safeMode && (
         <div className="banner warn">
@@ -191,7 +201,7 @@ export function App() {
 
       {!text && (
         <section className="empty">
-          <h1>Paste anything you're about to send to an AI.</h1>
+          <h1>Paste anything you're about to send to an AI. <em>Veil</em> keeps the secrets.</h1>
           <p>Veil finds personal data <em>on this device</em> with Gemini Nano, replaces it with meaningful placeholders,
             asks the cloud, then puts the real values back — locally.</p>
           <div className="samples">
@@ -203,9 +213,9 @@ export function App() {
       )}
 
       <main className={text ? "panes" : "panes compact"}>
-        <section className="pane">
+        <section className="pane device">
           <div className="pane-head">
-            <h2>Your text <span className="muted">· stays on this device</span></h2>
+            <h2><span className="zone device">on device</span> Your text</h2>
             <div className="row-gap">
               {text && !editing && <button className="ghost" onClick={() => setEditing(true)}>Edit</button>}
               {text && editing && <button className="ghost" onClick={() => setEditing(false)}>Done</button>}
@@ -213,7 +223,10 @@ export function App() {
             </div>
           </div>
           {text && result && !editing ? (
-            <DocView text={text} spans={candidates} keep={keep} onToggle={toggleKeep} />
+            <div className="doc-wrap">
+              {running && <div className="scanbeam" aria-hidden />}
+              <DocView text={text} spans={candidates} keep={keep} onToggle={toggleKeep} />
+            </div>
           ) : (
             <textarea
               className="input"
@@ -228,9 +241,9 @@ export function App() {
         </section>
 
         {text && (
-          <section className="pane">
+          <section className="pane cloud">
             <div className="pane-head">
-              <h2>What the cloud will see</h2>
+              <h2><span className="zone cloud">to cloud</span> What the cloud will see</h2>
               {masked && <span className="muted">{masked.vault.size} values held back</span>}
             </div>
             {masked ? <CloudView masked={masked.masked} /> : <div className="doc muted">Analysing…</div>}
@@ -259,6 +272,7 @@ export function App() {
               {sending ? "Asking…" : running ? "Still checking…" : "Ask with Veil"}
             </button>
           </div>
+          <Channel sending={sending} answered={!!answer} values={masked?.vault.size ?? 0} />
           {needsReview && (
             <label className="review">
               <input type="checkbox" checked={reviewed} onChange={(e) => setReviewed(e.target.checked)} />
@@ -278,7 +292,12 @@ export function App() {
                 </div>
               </div>
               <p className="small muted sent-q">Your question, as sent: <CloudView masked={answer.maskedQuestion} inline /></p>
-              {showRaw ? <CloudView masked={answer.raw} /> : <div className="doc prose">{answer.restored}</div>}
+              <AnimatePresence mode="wait">
+                <motion.div key={showRaw ? "raw" : "real"} initial={{ opacity: 0, y: 8, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  exit={{ opacity: 0, y: -8, filter: "blur(6px)" }} transition={{ duration: 0.35 }}>
+                  {showRaw ? <CloudView masked={answer.raw} /> : <div className="doc prose">{answer.restored}</div>}
+                </motion.div>
+              </AnimatePresence>
               <p className="muted small">
                 Cloud ({answer.source === "in_cloud" ? "Gemini" : answer.source}) answered in {answer.ms} ms ·
                 {" "}real values restored on this device · leak check passed
@@ -292,8 +311,9 @@ export function App() {
       )}
 
       <footer className="foot muted small">
-        Veil · on-device Gemini Nano + cloud Gemini via Firebase AI Logic · <a href="/spike.html">benchmark</a>
+        Veil · on-device Gemini Nano + cloud Gemini via Firebase AI Logic · <a href="/">home</a> · <a href="/spike.html">benchmark</a>
       </footer>
     </div>
+    </>
   );
 }
