@@ -13,8 +13,11 @@ const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as
 
 $("#app").innerHTML = `
   <header>
-    <h1>Veil · benchmark & debug</h1>
-    <p class="sub">Same pipeline as the app: rules → Nano names/places → Nano clues → "Guess Who" attacker.</p>
+    <div>
+      <h1>Veil <em>benchmark</em></h1>
+      <p class="sub">Same pipeline as Studio: rules → Gemini Nano names &amp; places → Nano clues → "Guess Who" attacker. Scored on the exact payload.</p>
+    </div>
+    <div class="row" style="margin:0"><a class="home" href="/">← Home</a><a class="home" href="/app/">Open Studio</a></div>
   </header>
   <section class="card" id="status-card">
     <div><strong>On-device model:</strong> <span id="status">checking…</span></div>
@@ -89,7 +92,8 @@ function render(text: string, res: VeilResult) {
     cur = s.end;
   }
   $("#highlight").innerHTML = html + esc(text.slice(cur));
-  $("#masked").textContent = mask(text, res.spans, maskOptionsFor(res.packs)).masked;
+  $("#masked").innerHTML = esc(mask(text, res.spans, maskOptionsFor(res.packs)).masked)
+    .replace(/\[([A-Z][A-Z0-9_]*?)_(\d+)((?: · [^\]]*)?)\]/g, (_m, l: string, n: string, h: string) => `<span class="chip">${l.replace(/_/g, " ").toLowerCase()} ${n}${h ? `<em>${h}</em>` : ""}</span>`);
 
   const exp = SAMPLES.find((x) => x.text === text)?.expected;
   const r = exp ? recall(text, res.spans, exp) : null;
