@@ -13,13 +13,13 @@ function Nav() {
   const w = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
   return (
     <>
-      <motion.div className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-gradient-to-r from-veil via-device to-cloud" style={{ scaleX: w }} />
+      <motion.div className="fixed inset-x-0 top-0 z-50 h-[3px] origin-left bg-marker" style={{ scaleX: w }} />
       <motion.nav className="liquid fixed inset-x-0 top-4 z-40 mx-auto flex w-[min(92%,880px)] items-center justify-between rounded-full px-3 py-2 pl-4"
         initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
         <a href="#top" className="flex items-center gap-2 font-semibold tracking-tight"><VeilMark size={22} />Veil</a>
         <div className="hidden items-center gap-1 text-sm text-mist md:flex">
           {[["Lens", "#lens"], ["How it works", "#how"], ["Proof", "#proof"], ["Research", "#research"], ["Who it's for", "#who"]].map(([l, h]) => (
-            <a key={h} href={h} className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/5 hover:text-fog">{l}</a>
+            <a key={h} href={h} className="rounded-full px-3 py-1.5 transition-colors hover:bg-black/5 hover:text-fog">{l}</a>
           ))}
         </div>
         <a href={STUDIO} className="rounded-full bg-fog px-4 py-1.5 text-sm font-medium text-ink transition-transform hover:scale-[1.03] active:scale-95">Open Studio</a>
@@ -66,14 +66,14 @@ function Hero() {
           <motion.a href="https://firebasehybridaihackathon.devpost.com/" target="_blank" rel="noreferrer"
             className="liquid inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-mist hover:text-fog"
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.7 }}>
-            <span className="h-1.5 w-1.5 rounded-full bg-device shadow-[0_0_10px_#2dd4bf]" />
+            <span className="h-1.5 w-1.5 rounded-full bg-device shadow-[0_0_10px_#0f7b5f]" />
             Hybrid AI · Firebase AI Logic · Gemini Nano + Gemini
           </motion.a>
           <h1 className="mt-6 text-[clamp(2.6rem,6.4vw,5.2rem)] leading-[0.98] tracking-[-0.035em]">
             <ProximityText text="The cloud gets the thinking." delay={1.75} />
             <br />
             <ProximityText text="Never your" delay={2.1} />{" "}
-            <motion.span className="font-serif font-normal italic text-gradient" initial={{ opacity: 0, filter: "blur(12px)" }}
+            <motion.span className="font-serif font-normal italic text-gradient" style={{ ["--marker-delay" as string]: "2.6s" }} initial={{ opacity: 0, filter: "blur(12px)" }}
               animate={{ opacity: 1, filter: "blur(0px)" }} transition={{ delay: 2.3, duration: 1 }}>secrets.</motion.span>
           </h1>
           <motion.p className="mt-6 max-w-xl text-lg leading-relaxed text-mist"
@@ -148,16 +148,16 @@ function Proof() {
         <p className="mt-4 max-w-2xl text-mist">Run-on text, typos, Hinglish, obfuscated emails, Cyrillic look-alikes, CSVs, quasi-identifiers — scored on the exact payload that would leave the device.</p>
       </Reveal>
       <div className="mt-12 grid auto-rows-[minmax(190px,auto)] gap-4 md:grid-cols-6">
-        <TiltCard className="md:col-span-3 md:row-span-2" glow="#2dd4bf">
+        <TiltCard className="md:col-span-3 md:row-span-2" glow="#0f7b5f">
           <div className="flex h-full flex-col justify-between p-7">
             <p className="text-sm text-mist">Private items that never reached the cloud</p>
             <div>
               <p className="text-7xl font-semibold tracking-tight md:text-8xl"><CountUp to={98.5} decimals={1} suffix="%" className="text-gradient" /></p>
               <div className="mt-6 space-y-3 text-xs">
-                {[["Rules only (safe mode)", 69.7, "#6c6c86"], ["Veil · rules + Gemini Nano", 98.5, "#2dd4bf"]].map(([l, v, c]) => (
+                {[["Rules only (safe mode)", 69.7, "#8b867a"], ["Veil · rules + Gemini Nano", 98.5, "#0f7b5f"]].map(([l, v, c]) => (
                   <div key={l as string}>
                     <div className="mb-1 flex justify-between text-mist"><span>{l}</span><span>{v}%</span></div>
-                    <div className="h-2 overflow-hidden rounded-full bg-white/5">
+                    <div className="h-2 overflow-hidden rounded-full bg-black/5">
                       <motion.div className="h-full rounded-full" style={{ background: c as string }} initial={{ width: 0 }}
                         whileInView={{ width: `${v}%` }} viewport={{ once: true }} transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }} />
                     </div>
@@ -167,20 +167,20 @@ function Proof() {
             </div>
           </div>
         </TiltCard>
-        <TiltCard className="md:col-span-3" glow="#7c6cff">
+        <TiltCard className="md:col-span-3" glow="#ffc21a">
           <div className="flex h-full items-end justify-between p-7">
             <div><p className="text-sm text-mist">Documents with zero leaks</p><p className="mt-2 text-5xl font-semibold"><CountUp to={110} />/113</p></div>
             <p className="max-w-[12rem] text-right text-xs text-dim">All 3 leaks happened during a model timeout — Veil flagged each and required review.</p>
           </div>
         </TiltCard>
-        <TiltCard className="md:col-span-2" glow="#60a5fa">
+        <TiltCard className="md:col-span-2" glow="#2a44e8">
           <div className="flex h-full flex-col justify-between p-6">
             <p className="text-sm text-mist">Personal values in the network payload</p>
             <p className="text-5xl font-semibold text-cloud">0</p>
             <p className="text-xs text-dim">Verified in Chrome DevTools.</p>
           </div>
         </TiltCard>
-        <TiltCard className="md:col-span-1" glow="#2dd4bf">
+        <TiltCard className="md:col-span-1" glow="#0f7b5f">
           <div className="flex h-full flex-col items-center justify-center gap-3 p-5 text-center">
             <span className="relative grid h-12 w-12 place-items-center rounded-full bg-device/15">
               <span className="absolute inset-0 animate-ping rounded-full bg-device/20" /><span className="h-3 w-3 rounded-full bg-device" />
@@ -188,16 +188,16 @@ function Proof() {
             <p className="text-sm">Works offline</p>
           </div>
         </TiltCard>
-        <TiltCard className="md:col-span-3" glow="#7c6cff">
+        <TiltCard className="md:col-span-3" glow="#ffc21a">
           <div className="p-7">
             <p className="text-sm text-mist">One SDK, both worlds — Firebase AI Logic</p>
-            <pre className="mt-4 overflow-x-auto rounded-2xl bg-black/40 p-4 font-mono text-[12.5px] leading-6 text-fog/90">
-{`detect  = getGenerativeModel(ai, { mode: `}<span className="text-device">ONLY_ON_DEVICE</span>{` })
-reason  = getGenerativeModel(ai, { mode: `}<span className="text-cloud">ONLY_IN_CLOUD</span>{` })
-result.response.inferenceSource  `}<span className="text-dim">// "on_device" | "in_cloud"</span></pre>
+            <pre className="mt-4 overflow-x-auto rounded-xl bg-fog p-4 font-mono text-[12.5px] leading-6 text-ink">
+{`detect  = getGenerativeModel(ai, { mode: `}<span className="text-marker">ONLY_ON_DEVICE</span>{` })
+reason  = getGenerativeModel(ai, { mode: `}<span className="text-[#9db0ff]">ONLY_IN_CLOUD</span>{` })
+result.response.inferenceSource  `}<span className="text-[#a7a294]">// "on_device" | "in_cloud"</span></pre>
           </div>
         </TiltCard>
-        <TiltCard className="md:col-span-3" glow="#ff6b6b">
+        <TiltCard className="md:col-span-3" glow="#e8492c">
           <div className="p-7">
             <p className="text-sm text-mist">Fail-closed leak gate</p>
             <p className="mt-3 text-lg leading-snug">Right before sending, the exact payload is re-scanned. If any hidden value would still leave the device, <span className="text-coral">nothing is sent.</span></p>
@@ -241,9 +241,9 @@ function Research() {
 }
 
 const PEOPLE = [
-  { who: "Priya, chartered accountant · Pune", line: "Explains a client's 143(1)(a) notice with AI — without the client's PAN, Aadhaar or income leaving her laptop.", law: "India · DPDP Act — obligations from May 2027", c: "#2dd4bf" },
-  { who: "Lena, freelance designer · Leipzig", line: "Drafts a firm overdue-invoice reply. Her IBAN and her client's name never reach the model.", law: "EU · GDPR", c: "#7c6cff" },
-  { who: "Aisha, HR manager · London", line: "Summarises a sensitive absence case for the board. Health and family details stay on the device.", law: "UK · UK GDPR", c: "#60a5fa" },
+  { who: "Priya, chartered accountant · Pune", line: "Explains a client's 143(1)(a) notice with AI — without the client's PAN, Aadhaar or income leaving her laptop.", law: "India · DPDP Act — obligations from May 2027", c: "#0f7b5f" },
+  { who: "Lena, freelance designer · Leipzig", line: "Drafts a firm overdue-invoice reply. Her IBAN and her client's name never reach the model.", law: "EU · GDPR", c: "#ffc21a" },
+  { who: "Aisha, HR manager · London", line: "Summarises a sensitive absence case for the board. Health and family details stay on the device.", law: "UK · UK GDPR", c: "#2a44e8" },
 ];
 
 function Who() {
@@ -291,7 +291,7 @@ function Finale() {
         </Reveal>
       </div>
       <div className="relative mt-20 select-none">
-        <p className="text-center text-[24vw] font-semibold leading-[0.8] tracking-[-0.06em] text-white/[.04]">Veil</p>
+        <p className="text-center text-[24vw] font-semibold leading-[0.8] tracking-[-0.06em] text-black/[.04]">Veil</p>
         <motion.p aria-hidden className="absolute inset-0 text-center text-[24vw] font-semibold leading-[0.8] tracking-[-0.06em] text-gradient"
           style={{ WebkitMaskImage: mask, maskImage: mask }}>Veil</motion.p>
       </div>

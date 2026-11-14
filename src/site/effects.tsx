@@ -35,8 +35,8 @@ export function CursorLight() {
     <>
       <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-0 h-[640px] w-[640px] rounded-full"
         style={{ x: lx, y: ly, translateX: "-50%", translateY: "-50%",
-          background: "radial-gradient(circle, rgb(124 108 255 / .16), rgb(45 212 191 / .07) 35%, transparent 65%)" }} />
-      <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-[70] rounded-full border border-white/60 mix-blend-difference"
+          background: "radial-gradient(circle, rgb(255 194 26 / .16), rgb(255 194 26 / .07) 35%, transparent 65%)" }} />
+      <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-[70] rounded-full border border-white/80 mix-blend-difference"
         style={{ x: rx, y: ry, translateX: "-50%", translateY: "-50%" }}
         animate={{ width: hover ? 44 : 18, height: hover ? 44 : 18, backgroundColor: down ? "rgba(255,255,255,.9)" : "rgba(255,255,255,0)" }}
         transition={{ type: "spring", stiffness: 400, damping: 28 }} />
@@ -63,7 +63,7 @@ export function Magnetic({ children, strength = 0.35, className = "" }: { childr
 }
 
 /** Card that tilts in 3D toward the cursor, with a moving glare and a spotlight border. */
-export function TiltCard({ children, className = "", max = 10, glow = "#7c6cff" }: { children: ReactNode; className?: string; max?: number; glow?: string }) {
+export function TiltCard({ children, className = "", max = 10, glow = "#ffc21a" }: { children: ReactNode; className?: string; max?: number; glow?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const px = useMotionValue(0.5), py = useMotionValue(0.5);
   const rx = useSpring(useTransform(py, [0, 1], [max, -max]), { stiffness: 220, damping: 20 });
@@ -212,13 +212,13 @@ export function VeilMark({ size = 32, draw = false }: { size?: number; draw?: bo
     <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden>
       <defs>
         <linearGradient id="vg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#7c6cff" /><stop offset=".55" stopColor="#2dd4bf" /><stop offset="1" stopColor="#60a5fa" />
+          <stop offset="0" stopColor="#16150f" /><stop offset="1" stopColor="#16150f" />
         </linearGradient>
       </defs>
       <motion.path d="M10 22c7 0 12 5 22 5s15-5 22-5" stroke="url(#vg)" strokeWidth="6" strokeLinecap="round"
         initial={draw ? { pathLength: 0, opacity: 0 } : false} animate={{ pathLength: 1, opacity: 1 }} transition={t} />
-      <motion.path d="M10 38c7 0 12 5 22 5s15-5 22-5" stroke="url(#vg)" strokeWidth="6" strokeLinecap="round" opacity=".55"
-        initial={draw ? { pathLength: 0, opacity: 0 } : false} animate={{ pathLength: 1, opacity: 0.55 }} transition={{ ...t, delay: 0.18 }} />
+      <motion.path d="M10 38c7 0 12 5 22 5s15-5 22-5" stroke="#ffc21a" strokeWidth="6" strokeLinecap="round"
+        initial={draw ? { pathLength: 0, opacity: 0 } : false} animate={{ pathLength: 1, opacity: 1 }} transition={{ ...t, delay: 0.18 }} />
     </svg>
   );
 }

@@ -212,7 +212,7 @@ export function App() {
           <div className="sample-grid">
             {SAMPLES.map((s, i) => (
               <motion.div key={s.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.07, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
-                <TiltCard className="h-full" max={9} glow={s.region === "IN" ? "#2dd4bf" : s.region === "EU" ? "#7c6cff" : "#60a5fa"}>
+                <TiltCard className="h-full" max={9} glow={s.region === "IN" ? "#0f7b5f" : s.region === "EU" ? "#ffc21a" : "#2a44e8"}>
                   <button className="sample-card" onClick={() => { setRegion(s.region); setText(s.text); setEditing(false); }}>
                     <span className="flag">{s.label.split(" ")[0]}</span>
                     <strong>{s.label.split(" ").slice(1).join(" ")}</strong>

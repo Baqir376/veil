@@ -68,13 +68,13 @@ export function VeilLoop() {
           <p>
             {ANSWER.map((s, i) => typeof s === "string" ? <span key={i}>{s}</span> : phase === 3
               ? <span key={i} className="vchip cloud mx-0.5">{s.tag}</span>
-              : <motion.span key={i} className="mx-0.5 rounded px-1 text-device" initial={{ backgroundColor: "rgba(45,212,191,.35)" }}
-                  animate={{ backgroundColor: "rgba(45,212,191,0)" }} transition={{ duration: 1.6 }}><Scramble text={s.real} duration={600} /></motion.span>)}
+              : <motion.span key={i} className="mx-0.5 rounded px-1 text-device" initial={{ backgroundColor: "rgba(255,194,26,.35)" }}
+                  animate={{ backgroundColor: "rgba(255,194,26,0)" }} transition={{ duration: 1.6 }}><Scramble text={s.real} duration={600} /></motion.span>)}
           </p>
         )}
         {phase === 1 && (
           <motion.div aria-hidden className="pointer-events-none absolute -inset-y-2 w-24"
-            style={{ background: "linear-gradient(90deg, transparent, rgb(45 212 191 / .35), transparent)", filter: "blur(4px)" }}
+            style={{ background: "linear-gradient(90deg, transparent, rgb(255 194 26 / .35), transparent)", filter: "blur(4px)" }}
             initial={{ left: "-20%" }} animate={{ left: "110%" }} transition={{ duration: 2.2, ease: "easeInOut" }} />
         )}
       </div>
@@ -98,10 +98,10 @@ export function VeilLoop() {
 }
 
 const STEPS = [
-  { k: "01", title: "Rules catch every ID", body: "In 2 ms, region rule packs find PAN, Aadhaar, IBAN, cards, keys — even hidden in Cyrillic look-alikes, full-width digits or “[at] gmail [dot] com”.", tint: "#f5b84b" },
-  { k: "02", title: "Gemini Nano reads like a human", body: "On your device, Gemini Nano finds names, places and the quiet giveaways regex can't: “the only female cardiologist in Ratnagiri”.", tint: "#2dd4bf" },
-  { k: "03", title: "Guess Who attacks it", body: "A second on-device pass plays detective. Whatever it can still infer about the person — location, job, family — gets masked too.", tint: "#ff6b6b" },
-  { k: "04", title: "Only tags reach the cloud", body: "Gemini in the cloud does the thinking with [person 1] and [amount 1 · ₹15–20L]. Your real values come back — on your device only.", tint: "#60a5fa" },
+  { k: "01", title: "Rules catch every ID", body: "In 2 ms, region rule packs find PAN, Aadhaar, IBAN, cards, keys — even hidden in Cyrillic look-alikes, full-width digits or “[at] gmail [dot] com”.", tint: "#b57a00" },
+  { k: "02", title: "Gemini Nano reads like a human", body: "On your device, Gemini Nano finds names, places and the quiet giveaways regex can't: “the only female cardiologist in Ratnagiri”.", tint: "#0f7b5f" },
+  { k: "03", title: "Guess Who attacks it", body: "A second on-device pass plays detective. Whatever it can still infer about the person — location, job, family — gets masked too.", tint: "#e8492c" },
+  { k: "04", title: "Only tags reach the cloud", body: "Gemini in the cloud does the thinking with [person 1] and [amount 1 · ₹15–20L]. Your real values come back — on your device only.", tint: "#2a44e8" },
 ];
 
 /** Sticky, scroll-driven explanation of the four stages. */
@@ -122,7 +122,7 @@ export function PipelineStory() {
                 <li key={s.k} className="relative overflow-hidden rounded-2xl p-4 transition-colors" style={{ background: i === active ? "rgb(255 255 255 / .05)" : "transparent" }}>
                   {i === active && <motion.span layoutId="step-bar" className="absolute left-0 top-0 h-full w-[3px]" style={{ background: s.tint }} />}
                   <div className="flex gap-4">
-                    <span className="font-mono text-sm" style={{ color: i === active ? s.tint : "#6c6c86" }}>{s.k}</span>
+                    <span className="font-mono text-sm" style={{ color: i === active ? s.tint : "#8b867a" }}>{s.k}</span>
                     <div>
                       <p className={`font-medium ${i === active ? "text-fog" : "text-mist"}`}>{s.title}</p>
                       <AnimatePresence initial={false}>
@@ -162,17 +162,17 @@ const HL = ({ c, children, d = 0 }: { c: string; children: React.ReactNode; d?: 
 function StepVisual({ i }: { i: number }) {
   if (i === 0) return (
     <Doc>
-      <p>PAN: <HL c="#f5b84b40" d={0.1}>ВQRPМ4821К</HL> <span className="text-dim">← Cyrillic look-alikes</span></p>
-      <p>Aadhaar: <HL c="#f5b84b40" d={0.25}>４８２１ ７７３３ ９０４５</HL></p>
-      <p>Mail: <HL c="#f5b84b40" d={0.4}>rohan [at] gmail [dot] com</HL></p>
-      <p>Card: <HL c="#f5b84b40" d={0.55}>4111 1111 1111 1111</HL></p>
+      <p>PAN: <HL c="#ffc21a66" d={0.1}>ВQRPМ4821К</HL> <span className="text-dim">← Cyrillic look-alikes</span></p>
+      <p>Aadhaar: <HL c="#ffc21a66" d={0.25}>４８２１ ７７３３ ９０４５</HL></p>
+      <p>Mail: <HL c="#ffc21a66" d={0.4}>rohan [at] gmail [dot] com</HL></p>
+      <p>Card: <HL c="#ffc21a66" d={0.55}>4111 1111 1111 1111</HL></p>
       <p className="mt-3 text-xs text-amber">17 ID formats · 4 regions · checksums verified · 2 ms</p>
     </Doc>
   );
   if (i === 1) return (
     <Doc>
-      <p>My client is <HL c="#2dd4bf38" d={0.2}>the only female cardiologist</HL> in <HL c="#2dd4bf38" d={0.4}>Ratnagiri</HL>.</p>
-      <p>She was on <HL c="#2dd4bf38" d={0.6}>Zee Marathi</HL> after <HL c="#2dd4bf38" d={0.8}>her twins topped the SSC exams</HL>.</p>
+      <p>My client is <HL c="#ffc21a99" d={0.2}>the only female cardiologist</HL> in <HL c="#ffc21a99" d={0.4}>Ratnagiri</HL>.</p>
+      <p>She was on <HL c="#ffc21a99" d={0.6}>Zee Marathi</HL> after <HL c="#ffc21a99" d={0.8}>her twins topped the SSC exams</HL>.</p>
       <p className="mt-3 inline-flex items-center gap-2 text-xs text-device"><span className="h-1.5 w-1.5 animate-pulse rounded-full bg-device" />Gemini Nano · on-device · ONLY_ON_DEVICE</p>
     </Doc>
   );
@@ -197,21 +197,21 @@ function Detective() {
     <div className="glass relative overflow-hidden rounded-3xl p-6">
       <p className="mb-4 font-mono text-xs uppercase tracking-[0.25em] text-coral">Guess Who · on-device attacker</p>
       {lines.map((l, k) => (
-        <motion.div key={l.a} className="relative mb-3 flex items-center justify-between rounded-xl bg-white/[.03] px-4 py-3"
+        <motion.div key={l.a} className="relative mb-3 flex items-center justify-between rounded-xl bg-black/[.03] px-4 py-3"
           initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 + k * 0.35 }}>
           <div className="text-sm"><span className="text-mist">{l.a}:</span> <span className="text-fog">{l.g}</span> <span className="text-dim">{l.e}</span></div>
-          <motion.span className="rounded-md border border-device/50 px-2 py-0.5 font-mono text-[11px] text-device"
+          <motion.span className="stamp text-[11px] text-coral"
             initial={{ scale: 2.2, opacity: 0, rotate: -12 }} animate={{ scale: 1, opacity: 1, rotate: -6 }}
             transition={{ delay: 0.75 + k * 0.35, type: "spring", stiffness: 500, damping: 18 }}>MASKED</motion.span>
         </motion.div>
       ))}
       <div className="mt-4 flex items-center gap-3 text-xs text-mist">
         Re-identification risk
-        <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
-          <motion.div className="absolute inset-y-0 left-0 rounded-full" initial={{ width: "85%", backgroundColor: "#ff6b6b" }}
-            animate={{ width: "12%", backgroundColor: "#2dd4bf" }} transition={{ delay: 1.9, duration: 1, ease: [0.16, 1, 0.3, 1] }} />
+        <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-black/10">
+          <motion.div className="absolute inset-y-0 left-0 rounded-full" initial={{ width: "85%", backgroundColor: "#e8492c" }}
+            animate={{ width: "12%", backgroundColor: "#0f7b5f" }} transition={{ delay: 1.9, duration: 1, ease: [0.16, 1, 0.3, 1] }} />
         </div>
-        <motion.span initial={{ color: "#ff6b6b" }} animate={{ color: "#2dd4bf" }} transition={{ delay: 1.9 }}>LOW</motion.span>
+        <motion.span initial={{ color: "#e8492c" }} animate={{ color: "#0f7b5f" }} transition={{ delay: 1.9 }}>LOW</motion.span>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 {
-  "when": "2026-11-14T13:03:00.921Z",
+  "when": "2026-11-14T13:07:53.114Z",
   "cases": 113,
   "summary": [
     {
@@ -8,7 +8,7 @@
       "recall": 0.8181818181818182,
       "utility": 1,
       "leakFreeCases": 8,
-      "avgMs": 6
+      "avgMs": 7
     },
     {
       "category": "run-on",
@@ -16,7 +16,7 @@
       "recall": 0.6666666666666666,
       "utility": 1,
       "leakFreeCases": 0,
-      "avgMs": 3
+      "avgMs": 4
     },
     {
       "category": "conversational",
@@ -32,7 +32,7 @@
       "recall": 1,
       "utility": 1,
       "leakFreeCases": 8,
-      "avgMs": 8
+      "avgMs": 10
     },
     {
       "category": "typos",
@@ -48,7 +48,7 @@
       "recall": 0.4,
       "utility": 1,
       "leakFreeCases": 0,
-      "avgMs": 2
+      "avgMs": 3
     },
     {
       "category": "ambiguous-names",
@@ -56,7 +56,7 @@
       "recall": 0,
       "utility": 1,
       "leakFreeCases": 0,
-      "avgMs": 0
+      "avgMs": 2
     },
     {
       "category": "obfuscated",
@@ -72,7 +72,7 @@
       "recall": 1,
       "utility": 1,
       "leakFreeCases": 12,
-      "avgMs": 9
+      "avgMs": 10
     },
     {
       "category": "quasi",
@@ -80,7 +80,7 @@
       "recall": 0,
       "utility": 1,
       "leakFreeCases": 0,
-      "avgMs": 1
+      "avgMs": 0
     },
     {
       "category": "eu-uk",
@@ -125,7 +125,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 2,
-      "ms": 11,
+      "ms": 9,
       "degraded": false
     },
     {
@@ -135,7 +135,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 2,
-      "ms": 10,
+      "ms": 11,
       "degraded": false
     },
     {
@@ -145,7 +145,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 2,
-      "ms": 12,
+      "ms": 10,
       "degraded": false
     },
     {
@@ -157,7 +157,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 3,
+      "ms": 4,
       "degraded": false
     },
     {
@@ -181,7 +181,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -193,7 +193,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -205,7 +205,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 1,
-      "ms": 3,
+      "ms": 5,
       "degraded": false
     },
     {
@@ -217,7 +217,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 1,
-      "ms": 3,
+      "ms": 4,
       "degraded": false
     },
     {
@@ -229,7 +229,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 1,
-      "ms": 3,
+      "ms": 4,
       "degraded": false
     },
     {
@@ -251,7 +251,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 2,
-      "ms": 5,
+      "ms": 7,
       "degraded": false
     },
     {
@@ -261,7 +261,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 2,
-      "ms": 4,
+      "ms": 5,
       "degraded": false
     },
     {
@@ -293,7 +293,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 0,
-      "ms": 3,
+      "ms": 7,
       "degraded": false
     },
     {
@@ -389,7 +389,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 11,
+      "ms": 17,
       "degraded": false
     },
     {
@@ -449,7 +449,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -493,7 +493,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 0,
-      "ms": 7,
+      "ms": 5,
       "degraded": false
     },
     {
@@ -503,7 +503,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 0,
-      "ms": 6,
+      "ms": 5,
       "degraded": false
     },
     {
@@ -523,7 +523,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 1,
-      "ms": 11,
+      "ms": 12,
       "degraded": false
     },
     {
@@ -533,7 +533,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 1,
-      "ms": 10,
+      "ms": 15,
       "degraded": false
     },
     {
@@ -543,7 +543,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 1,
-      "ms": 11,
+      "ms": 13,
       "degraded": false
     },
     {
@@ -553,7 +553,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 1,
-      "ms": 12,
+      "ms": 17,
       "degraded": false
     },
     {
@@ -589,7 +589,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 3,
+      "ms": 2,
       "degraded": false
     },
     {
@@ -601,7 +601,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 3,
+      "ms": 2,
       "degraded": false
     },
     {
@@ -737,7 +737,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -749,7 +749,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 5,
       "degraded": false
     },
     {
@@ -761,7 +761,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 2,
-      "ms": 0,
+      "ms": 6,
       "degraded": false
     },
     {
@@ -773,7 +773,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 2,
-      "ms": 0,
+      "ms": 1,
       "degraded": false
     },
     {
@@ -785,7 +785,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 2,
-      "ms": 0,
+      "ms": 2,
       "degraded": false
     },
     {
@@ -797,7 +797,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 2,
-      "ms": 0,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -809,7 +809,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 0,
+      "ms": 1,
       "degraded": false
     },
     {
@@ -821,7 +821,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 0,
+      "ms": 1,
       "degraded": false
     },
     {
@@ -833,7 +833,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -857,7 +857,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 2,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -923,7 +923,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 4,
       "degraded": false
     },
     {
@@ -953,7 +953,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -983,7 +983,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 3,
+      "ms": 2,
       "degraded": false
     },
     {
@@ -993,7 +993,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 3,
+      "ms": 2,
       "degraded": false
     },
     {
@@ -1013,7 +1013,7 @@
       "overMasked": [],
       "mustTotal": 1,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 3,
       "degraded": false
     },
     {
@@ -1023,7 +1023,7 @@
       "overMasked": [],
       "mustTotal": 6,
       "keepTotal": 1,
-      "ms": 13,
+      "ms": 15,
       "degraded": false
     },
     {
@@ -1043,7 +1043,7 @@
       "overMasked": [],
       "mustTotal": 6,
       "keepTotal": 1,
-      "ms": 15,
+      "ms": 17,
       "degraded": false
     },
     {
@@ -1053,7 +1053,7 @@
       "overMasked": [],
       "mustTotal": 6,
       "keepTotal": 1,
-      "ms": 14,
+      "ms": 13,
       "degraded": false
     },
     {
@@ -1083,7 +1083,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 0,
-      "ms": 4,
+      "ms": 9,
       "degraded": false
     },
     {
@@ -1093,7 +1093,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 0,
-      "ms": 5,
+      "ms": 7,
       "degraded": false
     },
     {
@@ -1103,7 +1103,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 1,
-      "ms": 5,
+      "ms": 6,
       "degraded": false
     },
     {
@@ -1113,7 +1113,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 1,
-      "ms": 6,
+      "ms": 7,
       "degraded": false
     },
     {
@@ -1123,7 +1123,7 @@
       "overMasked": [],
       "mustTotal": 4,
       "keepTotal": 1,
-      "ms": 10,
+      "ms": 9,
       "degraded": false
     },
     {
@@ -1146,7 +1146,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1159,7 +1159,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1172,7 +1172,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1185,7 +1185,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1198,7 +1198,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1211,7 +1211,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1224,7 +1224,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1237,7 +1237,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 0,
-      "ms": 1,
+      "ms": 0,
       "degraded": false
     },
     {
@@ -1249,7 +1249,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 2,
-      "ms": 8,
+      "ms": 7,
       "degraded": false
     },
     {
@@ -1261,7 +1261,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 2,
-      "ms": 6,
+      "ms": 5,
       "degraded": false
     },
     {
@@ -1285,7 +1285,7 @@
       "overMasked": [],
       "mustTotal": 3,
       "keepTotal": 2,
-      "ms": 3,
+      "ms": 4,
       "degraded": false
     },
     {
@@ -1321,7 +1321,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 1,
+      "ms": 2,
       "degraded": false
     },
     {
@@ -1333,7 +1333,7 @@
       "overMasked": [],
       "mustTotal": 2,
       "keepTotal": 1,
-      "ms": 2,
+      "ms": 1,
       "degraded": false
     },
     {

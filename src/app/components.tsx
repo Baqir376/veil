@@ -179,8 +179,8 @@ export function RestoredView({ raw, vault, reserved }: { raw: string; vault: Map
     if (m.index > cur) parts.push(<Fragment key={`t${i}`}>{raw.slice(cur, m.index)}</Fragment>);
     parts.push(v === undefined ? <Fragment key={`k${i}`}>{m[0]}</Fragment> : (
       <motion.span key={`v${i}`} className="restored" title={`restored on this device · was ${m[0]}`}
-        initial={{ backgroundColor: "rgba(45,212,191,.35)", boxShadow: "0 0 18px rgba(45,212,191,.6)" }}
-        animate={{ backgroundColor: "rgba(45,212,191,.08)", boxShadow: "0 0 0px rgba(45,212,191,0)" }}
+        initial={{ backgroundColor: "rgba(255,194,26,.35)", boxShadow: "0 0 18px rgba(255,194,26,.6)" }}
+        animate={{ backgroundColor: "rgba(255,194,26,.08)", boxShadow: "0 0 0px rgba(255,194,26,0)" }}
         transition={{ duration: 1.8, delay: 0.3 + Math.min(i, 24) * 0.06 }}>
         <Scramble text={v} duration={700} />
       </motion.span>
@@ -246,12 +246,12 @@ export function Channel({ sending, answered, values }: { sending: boolean; answe
       <div className={`wire ${online ? "" : "off"}`}>
         <AnimatePresence>
           {online && sending && [0, 1, 2].map((k) => (
-            <motion.span key={`up${k}`} className="pkt" style={{ background: "var(--device)", boxShadow: "0 0 14px var(--device)" }}
+            <motion.span key={`up${k}`} className="pkt" style={{ background: "var(--marker)", border: "1.5px solid var(--ink)" }}
               initial={{ left: "0%", opacity: 0 }} animate={{ left: "94%", opacity: [0, 1, 1, 0] }}
               transition={{ duration: 1.1, delay: k * 0.25, repeat: Infinity, repeatDelay: 0.3, ease: "easeInOut" }} />
           ))}
           {online && answered && !sending && [0, 1].map((k) => (
-            <motion.span key={`down${k}`} className="pkt" style={{ background: "var(--cloud)", boxShadow: "0 0 14px var(--cloud)" }}
+            <motion.span key={`down${k}`} className="pkt" style={{ background: "var(--cloud)", border: "1.5px solid var(--ink)" }}
               initial={{ left: "94%", opacity: 0 }} animate={{ left: "0%", opacity: [0, 1, 1, 0] }}
               transition={{ duration: 1.1, delay: k * 0.25, ease: "easeInOut" }} />
           ))}

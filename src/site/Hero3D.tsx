@@ -9,9 +9,10 @@ import { Float, MeshTransmissionMaterial, RoundedBox, Sparkles, Environment, Lig
 import type { MotionValue } from "motion/react";
 import * as THREE from "three";
 
-const TEAL = new THREE.Color("#2dd4bf");
-const BLUE = new THREE.Color("#60a5fa");
-const VIOLET = new THREE.Color("#7c6cff");
+// "Redacted" palette in 3D: highlighter-yellow data on the device, ink bars, cobalt in the cloud.
+const TEAL = new THREE.Color("#ffb800");   // on-device data (highlighter)
+const BLUE = new THREE.Color("#2a44e8");   // cloud tags (cobalt)
+const VIOLET = new THREE.Color("#16150f"); // redaction ink
 
 const Progress = createContext<MotionValue<number> | null>(null);
 const smooth = (a: number, b: number, v: number) => { const t = THREE.MathUtils.clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
@@ -64,7 +65,7 @@ function Core() {
           <icosahedronGeometry args={[1.35, 1]} />
           <MeshTransmissionMaterial backside samples={6} resolution={512} thickness={0.55} roughness={0.08}
             transmission={1} ior={1.35} chromaticAberration={0.08} anisotropy={0.2} distortion={0.25} distortionScale={0.4}
-            temporalDistortion={0.12} color="#cfeee9" attenuationColor="#7c6cff" attenuationDistance={2.2} />
+            temporalDistortion={0.12} color="#ffffff" attenuationColor="#ffe08a" attenuationDistance={3} />
         </mesh>
         <mesh ref={heart}>
           <sphereGeometry args={[0.42, 48, 48]} />
@@ -195,7 +196,7 @@ export default function Hero3D({ progress }: { progress?: MotionValue<number> })
   }, []);
 
   if (!ok) {
-    return <div ref={wrap} className="h-full w-full rounded-full bg-[radial-gradient(circle_at_40%_40%,#2dd4bf55,#7c6cff22_45%,transparent_70%)]" />;
+    return <div ref={wrap} className="h-full w-full rounded-full bg-[radial-gradient(circle_at_40%_40%,#0f7b5f55,#ffc21a22_45%,transparent_70%)]" />;
   }
   return (
     <div ref={wrap} className="h-full w-full">
@@ -208,12 +209,12 @@ export default function Hero3D({ progress }: { progress?: MotionValue<number> })
             <Core />
             <Cloud />
             <Tokens />
-            <Sparkles count={70} scale={[10, 5, 4]} size={2.2} speed={0.35} color="#a99fff" opacity={0.7} />
+            <Sparkles count={60} scale={[10, 5, 4]} size={2.6} speed={0.35} color="#16150f" opacity={0.35} />
           </Rig>
           <Environment resolution={256} frames={1}>
             <Lightformer intensity={2} position={[0, 4, -6]} scale={[10, 3, 1]} color="#ffffff" />
-            <Lightformer intensity={1.4} position={[-6, 0, 2]} scale={[2, 8, 1]} color="#7c6cff" />
-            <Lightformer intensity={1.4} position={[6, -1, 2]} scale={[2, 8, 1]} color="#2dd4bf" />
+            <Lightformer intensity={1.4} position={[-6, 0, 2]} scale={[2, 8, 1]} color="#ffc21a" />
+            <Lightformer intensity={1.4} position={[6, -1, 2]} scale={[2, 8, 1]} color="#0f7b5f" />
           </Environment>
         </Progress.Provider>
       </Canvas>

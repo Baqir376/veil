@@ -1,98 +1,106 @@
 @import "tailwindcss";
 
+/*
+ * "Redacted" — Veil's visual system. Not glowing gradients on black: a classified document on warm paper.
+ * Highlighter yellow = found on your device. Black bar = hidden. Cobalt = what the cloud receives.
+ * Token names are semantic: `ink` is the page, `fog` is the text colour.
+ */
 @theme {
-  --color-ink: #07070d;
-  --color-ink-2: #0d0d17;
-  --color-surface: #12121d;
-  --color-line: #23233a;
-  --color-fog: #ececf4;
-  --color-mist: #a3a3bb;
-  --color-dim: #6c6c86;
-  --color-device: #2dd4bf;
-  --color-cloud: #60a5fa;
-  --color-veil: #7c6cff;
-  --color-coral: #ff6b6b;
-  --color-amber: #f5b84b;
+  --color-ink: #f4efe6;      /* paper — page background */
+  --color-ink-2: #ece6da;    /* paper, one shade down */
+  --color-surface: #fffdf8;  /* card stock */
+  --color-line: #d9d2c3;     /* hairlines */
+  --color-fog: #16150f;      /* ink — primary text */
+  --color-mist: #55524a;     /* secondary text */
+  --color-dim: #8b867a;      /* tertiary text */
+  --color-device: #0f7b5f;   /* on-device / safe (forest) */
+  --color-cloud: #2a44e8;    /* cloud (cobalt) */
+  --color-veil: #16150f;     /* the redaction bar */
+  --color-coral: #e8492c;    /* risk (tomato) */
+  --color-amber: #b57a00;    /* rules (dark ochre, readable) */
+  --color-marker: #ffc21a;   /* highlighter */
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, monospace;
-  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
 }
 
 html { background: var(--color-ink); color: var(--color-fog); scroll-behavior: smooth; }
 body { margin: 0; font-family: var(--font-sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-::selection { background: color-mix(in srgb, var(--color-veil) 45%, transparent); color: white; }
+::selection { background: var(--color-marker); color: var(--color-fog); }
 
-/* Fine film grain over everything — subtle, premium */
+/* Paper grain */
 .grain::after {
-  content: ""; position: fixed; inset: -50%; pointer-events: none; z-index: 60; opacity: .045;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  content: ""; position: fixed; inset: -50%; pointer-events: none; z-index: 60; opacity: .09; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .3  0 0 0 0 .2  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   animation: grain 8s steps(10) infinite;
 }
 @keyframes grain { 0%,100% { transform: translate(0,0) } 20% { transform: translate(-3%,2%) } 40% { transform: translate(2%,-3%) } 60% { transform: translate(-2%,-1%) } 80% { transform: translate(3%,3%) } }
 
-/* Glass, Apple-style: bright hairline, deep blur, soft inner light */
+/* Card stock: white paper with an ink hairline and a hard, offset print shadow */
 .glass {
-  background: linear-gradient(180deg, rgb(255 255 255 / .07), rgb(255 255 255 / .025));
-  border: 1px solid rgb(255 255 255 / .09);
-  box-shadow: inset 0 1px 0 rgb(255 255 255 / .08), 0 20px 60px -20px rgb(0 0 0 / .6);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-fog);
+  box-shadow: 5px 5px 0 var(--color-fog);
 }
 
-/* Liquid Glass — refracting surface with a specular rim. Chromium gets real refraction; others get frost.
-   In the components layer so utilities like `fixed` still win. */
-@layer components {
-.liquid {
-  position: relative; isolation: isolate;
-  background: linear-gradient(180deg, rgb(255 255 255 / .10), rgb(255 255 255 / .03));
-  border: 1px solid rgb(255 255 255 / .14);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / .35),
-    inset 0 -1px 0 rgb(255 255 255 / .06),
-    inset 0 0 22px rgb(255 255 255 / .05),
-    0 18px 50px -18px rgb(0 0 0 / .75);
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-}
-.lg-ok .liquid { backdrop-filter: url(#liquid-glass) blur(6px) saturate(170%) brightness(1.08); }
-.liquid::after {
-  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-  background: linear-gradient(115deg, rgb(255 255 255 / .22) 0%, transparent 28%, transparent 70%, rgb(255 255 255 / .08) 100%);
-  mix-blend-mode: overlay;
-}
-}
-
+/* Highlighter: a yellow marker stroke behind the text, drawn left → right */
 .text-gradient {
-  background: linear-gradient(100deg, #fff 10%, #c9c6ff 40%, var(--color-device) 70%, var(--color-cloud) 95%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  color: var(--color-fog);
+  background: linear-gradient(104deg, transparent 0.6%, var(--color-marker) 2.4%, #ffd34d 50%, var(--color-marker) 96%, transparent 99%) no-repeat 0 78% / 100% 46%;
+  padding: 0 .08em; border-radius: .12em .2em;
+  animation: marker 1s cubic-bezier(.65,0,.35,1) both; animation-delay: var(--marker-delay, 0s);
 }
+@keyframes marker { from { background-size: 0% 46%; } to { background-size: 100% 46%; } }
 
-/* Masked-value chip used across the site */
+/* A masked value: a black redaction bar carrying its tag */
 .vchip {
-  display: inline-flex; align-items: center; gap: .3em; padding: 0 .45em; border-radius: .45em;
-  font-family: var(--font-sans); font-size: .82em; line-height: 1.55; white-space: nowrap;
-  color: #d7fff8; background: color-mix(in srgb, var(--color-device) 16%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-device) 40%, transparent);
-  box-shadow: 0 0 18px -6px var(--color-device);
+  display: inline-flex; align-items: center; gap: .3em; padding: 0 .5em; border-radius: .2em;
+  font-family: var(--font-mono); font-size: .8em; line-height: 1.6; white-space: nowrap; letter-spacing: .01em;
+  color: var(--color-marker); background: var(--color-fog);
 }
-.vchip.cloud { color: #dcebff; background: color-mix(in srgb, var(--color-cloud) 16%, transparent); border-color: color-mix(in srgb, var(--color-cloud) 40%, transparent); box-shadow: 0 0 18px -6px var(--color-cloud); }
+.vchip.cloud { color: #fff; background: var(--color-cloud); }
 
-/* Animated conic border for the primary CTA */
+/* Primary button border: a slowly rotating ink/marker/cobalt ring */
 @property --angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
 .ring-spin { position: relative; isolation: isolate; }
 .ring-spin::before {
-  content: ""; position: absolute; inset: -1px; border-radius: inherit; z-index: -1; padding: 1px;
-  background: conic-gradient(from var(--angle), transparent 0 60%, var(--color-device), var(--color-veil), var(--color-cloud), transparent 95%);
+  content: ""; position: absolute; inset: -2px; border-radius: inherit; z-index: -1; padding: 2px;
+  background: conic-gradient(from var(--angle), var(--color-fog) 0 55%, var(--color-marker), var(--color-cloud), var(--color-fog) 95%);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
-  animation: spin-angle 4s linear infinite;
+  animation: spin-angle 5s linear infinite;
 }
 @keyframes spin-angle { to { --angle: 360deg; } }
 
-/* Dotted grid backdrop with a radial fade */
+/* Ruled-paper backdrop */
 .dots {
-  background-image: radial-gradient(rgb(255 255 255 / .07) 1px, transparent 1px);
-  background-size: 22px 22px;
-  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  background-image: linear-gradient(rgb(22 21 15 / .06) 1px, transparent 1px);
+  background-size: 100% 34px;
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 78%);
+}
+
+/* Liquid Glass — refracting clear surface. In the components layer so utilities like `fixed` still win. */
+@layer components {
+.liquid {
+  position: relative; isolation: isolate;
+  background: linear-gradient(180deg, rgb(255 255 255 / .72), rgb(255 255 255 / .42));
+  border: 1px solid rgb(22 21 15 / .14);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .9), inset 0 -1px 0 rgb(22 21 15 / .05), 0 14px 40px -18px rgb(22 21 15 / .45);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+}
+.lg-ok .liquid { backdrop-filter: url(#liquid-glass) blur(5px) saturate(170%); }
+.liquid::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(115deg, rgb(255 255 255 / .7) 0%, transparent 30%, transparent 72%, rgb(255 255 255 / .35) 100%);
+  mix-blend-mode: soft-light;
+}
+}
+
+/* Rubber stamp */
+.stamp {
+  display: inline-block; padding: .15em .55em; border: 2px solid currentColor; border-radius: .25em;
+  font-family: var(--font-mono); font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='40'><filter id='r'><feTurbulence baseFrequency='.9' numOctaves='2'/><feComponentTransfer><feFuncA type='discrete' tableValues='1 1 1 0 1 1'/></feComponentTransfer></filter><rect width='100%' height='100%' filter='url(%23r)'/></svg>");
 }
 
 @media (prefers-reduced-motion: reduce) {

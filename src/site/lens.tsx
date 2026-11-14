@@ -59,7 +59,7 @@ export function PrivacyLens() {
         <p className="whitespace-pre-wrap text-fog/85">{render(false)}</p>
         {/* The cloud's view, revealed only inside the lens */}
         <motion.div aria-hidden className="pointer-events-none absolute inset-0 p-6 sm:p-8" style={{ clipPath: clip, WebkitClipPath: clip }}>
-          <div className="absolute inset-0 bg-[#0b1324]/95" />
+          <div className="absolute inset-0 bg-[#eef1ff]" />
           <div className="relative">
             <div className="mb-4 flex items-center justify-between font-sans text-xs text-cloud"><span>what the cloud sees</span></div>
             <p className="whitespace-pre-wrap text-fog/85">{render(true)}</p>
@@ -68,7 +68,7 @@ export function PrivacyLens() {
         {/* Lens rim */}
         <motion.div aria-hidden className="pointer-events-none absolute left-0 top-0 rounded-full"
           style={{ x: sx, y: sy, width: R * 2, height: R * 2, translateX: "-50%", translateY: "-50%",
-            boxShadow: "inset 0 0 0 1.5px rgb(255 255 255 / .55), inset 0 0 30px rgb(96 165 250 / .35), 0 0 40px rgb(96 165 250 / .25), 0 20px 60px -10px rgb(0 0 0 / .6)",
+            boxShadow: "inset 0 0 0 1.5px rgb(255 255 255 / .55), inset 0 0 30px rgb(42 68 232 / .35), 0 0 40px rgb(42 68 232 / .25), 0 20px 60px -10px rgb(0 0 0 / .6)",
             background: "radial-gradient(circle at 30% 25%, rgb(255 255 255 / .18), transparent 40%)" }} />
         <motion.div aria-hidden className="pointer-events-none absolute left-0 top-0 rounded-full bg-cloud/90 px-2 py-0.5 font-sans text-[10px] font-medium text-ink"
           style={{ x: sx, y: sy, translateX: "-50%", translateY: R + 6 }}>cloud view</motion.div>
