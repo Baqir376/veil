@@ -208,3 +208,23 @@ button.ghost:hover { border-color: var(--accent); }
 .receipt dd { margin: 0; word-break: break-all; }
 
 .foot { text-align: center; margin-top: 28px; }
+
+/* Restored values in the answer */
+.restored { color: var(--device); border-radius: 5px; padding: 0 3px; font-weight: 500; }
+
+/* Burst of particles at "this device" when the answer comes home */
+.burst { position: absolute; left: 50%; top: 50%; pointer-events: none; }
+.burst i { position: absolute; width: 6px; height: 6px; margin: -3px; border-radius: 50%; background: var(--device); box-shadow: 0 0 10px var(--device); }
+
+/* Sample cards */
+.sample-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; max-width: 980px; margin: 0 auto 10px; text-align: left; }
+.sample-card { display: flex; flex-direction: column; gap: 10px; padding: 18px; height: 100%; cursor: pointer; background: none; border: 0; text-align: left; width: 100%; }
+.sample-card .flag { font-size: 1.6rem; }
+.sample-card .snip { font-family: "Geist Mono", monospace; font-size: .76rem; color: var(--muted); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.sample-card .go { margin-top: auto; color: var(--device); font-size: .82rem; }
+.or-line { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: .8rem; max-width: 980px; margin: 18px auto 12px; }
+.or-line::before, .or-line::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+/* Liquid ask bar */
+.ask.liquid { border-radius: var(--radius); }

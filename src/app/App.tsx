@@ -7,8 +7,9 @@ import {
 import { availability, detectDirect, askCloud, nanoDetector } from "../nano";
 import { SAMPLES } from "../samples";
 import { buildReceipt, type Receipt } from "./receipt";
-import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide } from "./components";
-import { CursorLight, VeilMark } from "../site/effects";
+import { DocView, CloudView, StageBar, RiskCard, ReceiptCard, ModelPill, Channel, StepGuide, RestoredView } from "./components";
+import { CursorLight, VeilMark, TiltCard } from "../site/effects";
+import { LiquidGlassDefs } from "../site/liquid";
 
 export type ModelState = "checking" | "warming" | "ready" | "safe" | "downloadable";
 
@@ -27,6 +28,8 @@ interface Answer {
   source?: string;
   maskedQuestion: string;
   gateAutoMasked: string[];
+  vault: Map<string, string>;
+  reserved: Set<string>;
 }
 
 /** Turn SDK/network errors into something a person can act on. Nothing was sent in any of these cases. */
@@ -133,7 +136,8 @@ export function App() {
       }
       const cloud = await askCloud(built.payload);
       const r = rehydrate(cloud.text, built.vault, built.reserved);
-      setAnswer({ raw: cloud.text, restored: r.text, invented: r.invented, ms: cloud.ms, source: cloud.source, maskedQuestion: built.maskedQuestion, gateAutoMasked: built.gate.autoMasked });
+      setAnswer({ raw: cloud.text, restored: r.text, invented: r.invented, ms: cloud.ms, source: cloud.source, maskedQuestion: built.maskedQuestion,
+        gateAutoMasked: built.gate.autoMasked, vault: built.vault, reserved: built.reserved });
       setReceipt(await buildReceipt({ result, vault: built.vault, payload: built.payload, cloudSource: cloud.source, invented: r.invented, region, gateAutoMasked: built.gate.autoMasked.length }));
     } catch (e: any) {
       setError(friendlyCloudError(e));
@@ -156,6 +160,7 @@ export function App() {
   return (
     <>
     <div className="backdrop" aria-hidden />
+    <LiquidGlassDefs />
     <CursorLight />
     <div className="shell">
       <header className="top">
@@ -204,11 +209,21 @@ export function App() {
           <h1>Paste anything you're about to send to an AI. <em>Veil</em> keeps the secrets.</h1>
           <p>Veil finds personal data <em>on this device</em> with Gemini Nano, replaces it with meaningful placeholders,
             asks the cloud, then puts the real values back — locally.</p>
-          <div className="samples">
-            {SAMPLES.map((s) => (
-              <button key={s.id} onClick={() => { setRegion(s.region); setText(s.text); setEditing(false); }}>{s.label}</button>
+          <div className="sample-grid">
+            {SAMPLES.map((s, i) => (
+              <motion.div key={s.id} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.07, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
+                <TiltCard className="h-full" max={9} glow={s.region === "IN" ? "#2dd4bf" : s.region === "EU" ? "#7c6cff" : "#60a5fa"}>
+                  <button className="sample-card" onClick={() => { setRegion(s.region); setText(s.text); setEditing(false); }}>
+                    <span className="flag">{s.label.split(" ")[0]}</span>
+                    <strong>{s.label.split(" ").slice(1).join(" ")}</strong>
+                    <span className="snip">{s.text.replace(/\s+/g, " ").slice(0, 140)}…</span>
+                    <span className="go">Try this sample →</span>
+                  </button>
+                </TiltCard>
+              </motion.div>
             ))}
           </div>
+          <div className="or-line">or paste your own text below</div>
         </section>
       )}
 
@@ -260,7 +275,7 @@ export function App() {
       </main>
 
       {text && (
-        <section className="ask">
+        <section className="ask liquid">
           <div className="ask-row">
             <input
               value={question}
@@ -295,7 +310,7 @@ export function App() {
               <AnimatePresence mode="wait">
                 <motion.div key={showRaw ? "raw" : "real"} initial={{ opacity: 0, y: 8, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   exit={{ opacity: 0, y: -8, filter: "blur(6px)" }} transition={{ duration: 0.35 }}>
-                  {showRaw ? <CloudView masked={answer.raw} /> : <div className="doc prose">{answer.restored}</div>}
+                  {showRaw ? <CloudView masked={answer.raw} /> : <RestoredView raw={answer.raw} vault={answer.vault} reserved={answer.reserved} />}
                 </motion.div>
               </AnimatePresence>
               <p className="muted small">

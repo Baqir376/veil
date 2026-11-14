@@ -1,7 +1,9 @@
 import { lazy, Suspense, useRef } from "react";
 import { motion, useScroll, useSpring, useTransform, useMotionValue, useMotionTemplate } from "motion/react";
-import { CursorLight, Magnetic, TiltCard, CountUp, Reveal, WordsReveal, VeilMark, IntroLoader } from "./effects";
+import { CursorLight, Magnetic, TiltCard, CountUp, Reveal, ProximityText, VeilMark, IntroLoader } from "./effects";
 import { VeilLoop, PipelineStory } from "./demos";
+import { PrivacyLens } from "./lens";
+import { LiquidGlassDefs } from "./liquid";
 
 const Hero3D = lazy(() => import("./Hero3D"));
 const STUDIO = "/app/";
@@ -12,11 +14,11 @@ function Nav() {
   return (
     <>
       <motion.div className="fixed inset-x-0 top-0 z-50 h-[2px] origin-left bg-gradient-to-r from-veil via-device to-cloud" style={{ scaleX: w }} />
-      <motion.nav className="fixed inset-x-0 top-4 z-40 mx-auto flex w-[min(92%,880px)] items-center justify-between rounded-full glass px-3 py-2 pl-4"
+      <motion.nav className="liquid fixed inset-x-0 top-4 z-40 mx-auto flex w-[min(92%,880px)] items-center justify-between rounded-full px-3 py-2 pl-4"
         initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 1.6, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}>
         <a href="#top" className="flex items-center gap-2 font-semibold tracking-tight"><VeilMark size={22} />Veil</a>
         <div className="hidden items-center gap-1 text-sm text-mist md:flex">
-          {[["How it works", "#how"], ["Proof", "#proof"], ["Research", "#research"], ["Who it's for", "#who"]].map(([l, h]) => (
+          {[["Lens", "#lens"], ["How it works", "#how"], ["Proof", "#proof"], ["Research", "#research"], ["Who it's for", "#who"]].map(([l, h]) => (
             <a key={h} href={h} className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/5 hover:text-fog">{l}</a>
           ))}
         </div>
@@ -28,25 +30,49 @@ function Nav() {
 
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y3d = useTransform(scrollYProgress, [0, 1], [0, 160]);
-  const fade = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  // Pinned scene: the page scrolls 230vh while the hero stays put and the 3D tells the story.
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const fade = useTransform(scrollYProgress, [0.05, 0.3], [1, 0]);
+  const lift = useTransform(scrollYProgress, [0.05, 0.3], [0, -60]);
+  const cap = useTransform(scrollYProgress, [0.42, 0.6], [0, 1]);
+  const capY = useTransform(scrollYProgress, [0.42, 0.6], [30, 0]);
+  const hint = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
   return (
-    <section id="top" ref={ref} className="relative overflow-hidden pt-32 md:pt-36">
-      <div aria-hidden className="dots absolute inset-0" />
-      <div aria-hidden className="absolute -top-40 left-1/2 h-[640px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgb(124_108_255/.22),transparent_60%)] blur-2xl" />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-6 px-4 md:grid-cols-[1.05fr_1fr] md:px-8">
-        <motion.div style={{ opacity: fade }} className="relative z-10">
+    <section id="top" ref={ref} className="relative" style={{ height: "230vh" }}>
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <div aria-hidden className="dots absolute inset-0" />
+        <div aria-hidden className="absolute -top-40 left-1/2 h-[640px] w-[1100px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse,rgb(124_108_255/.22),transparent_60%)] blur-2xl" />
+        <motion.div className="absolute inset-0" initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1.5, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}>
+          <Suspense fallback={null}><Hero3D progress={scrollYProgress} /></Suspense>
+        </motion.div>
+
+        {/* Scene 2 captions: appear when the 3D has split into device and cloud */}
+        <motion.div className="pointer-events-none absolute inset-x-0 bottom-[14vh] mx-auto grid max-w-6xl grid-cols-2 px-6 md:px-10" style={{ opacity: cap, y: capY }}>
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-device">Your device</p>
+            <p className="mt-2 max-w-xs text-2xl font-semibold tracking-tight md:text-3xl">Keeps every secret.</p>
+            <p className="mt-2 max-w-xs text-sm text-mist">Gemini Nano finds and hides personal data right here.</p>
+          </div>
+          <div className="text-right">
+            <p className="font-mono text-xs uppercase tracking-[0.25em] text-cloud">The cloud</p>
+            <p className="ml-auto mt-2 max-w-xs text-2xl font-semibold tracking-tight md:text-3xl">Does the thinking.</p>
+            <p className="ml-auto mt-2 max-w-xs text-sm text-mist">Gemini reasons over tags. Only tags ever cross.</p>
+          </div>
+        </motion.div>
+
+        <div className="relative mx-auto flex h-full max-w-6xl items-center px-4 md:px-8">
+        <motion.div style={{ opacity: fade, y: lift }} className="relative z-10 max-w-[38rem] pt-16">
           <motion.a href="https://firebasehybridaihackathon.devpost.com/" target="_blank" rel="noreferrer"
-            className="glass inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-mist hover:text-fog"
+            className="liquid inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs text-mist hover:text-fog"
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.7 }}>
             <span className="h-1.5 w-1.5 rounded-full bg-device shadow-[0_0_10px_#2dd4bf]" />
             Hybrid AI · Firebase AI Logic · Gemini Nano + Gemini
           </motion.a>
-          <h1 className="mt-6 text-[clamp(2.6rem,6.4vw,5.2rem)] font-semibold leading-[0.98] tracking-[-0.035em]">
-            <WordsReveal text="The cloud gets the thinking." delay={1.75} />
+          <h1 className="mt-6 text-[clamp(2.6rem,6.4vw,5.2rem)] leading-[0.98] tracking-[-0.035em]">
+            <ProximityText text="The cloud gets the thinking." delay={1.75} />
             <br />
-            <WordsReveal text="Never your" delay={2.1} />{" "}
+            <ProximityText text="Never your" delay={2.1} />{" "}
             <motion.span className="font-serif font-normal italic text-gradient" initial={{ opacity: 0, filter: "blur(12px)" }}
               animate={{ opacity: 1, filter: "blur(0px)" }} transition={{ delay: 2.3, duration: 1 }}>secrets.</motion.span>
           </h1>
@@ -58,28 +84,42 @@ function Hero() {
           <motion.div className="mt-9 flex flex-wrap items-center gap-4"
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.65, duration: 0.8 }}>
             <Magnetic>
-              <a href={STUDIO} className="ring-spin group inline-flex items-center gap-2 rounded-full bg-white/[.06] px-6 py-3.5 font-medium backdrop-blur">
+              <a href={STUDIO} className="liquid ring-spin group inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-medium">
                 Open Veil Studio
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </a>
             </Magnetic>
-            <a href="#how" className="rounded-full px-5 py-3 text-mist transition-colors hover:text-fog">See how it works</a>
+            <a href="#lens" className="rounded-full px-5 py-3 text-mist transition-colors hover:text-fog">See what the cloud sees</a>
           </motion.div>
           <motion.div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-xs text-dim" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.9 }}>
             <span>● 98.5% recall, measured</span><span>● Works offline</span><span>● Nothing stored, nothing sent raw</span>
           </motion.div>
         </motion.div>
-        <motion.div className="relative h-[420px] md:h-[600px]" style={{ y: y3d }}
-          initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 1.5, duration: 1.4, ease: [0.16, 1, 0.3, 1] }}>
-          <Suspense fallback={<div className="h-full w-full animate-pulse rounded-full bg-[radial-gradient(circle,#2dd4bf22,transparent_60%)]" />}>
-            <Hero3D />
-          </Suspense>
-          <div className="pointer-events-none absolute bottom-8 left-4 font-mono text-[11px] text-device/80">◉ on your device</div>
-          <div className="pointer-events-none absolute right-2 top-10 font-mono text-[11px] text-cloud/80">cloud ◉</div>
+        </div>
+
+        <motion.div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center" style={{ opacity: hint }}>
+          <motion.div className="flex flex-col items-center gap-2 text-[11px] text-dim" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3.2 }}>
+            scroll
+            <motion.span className="block h-8 w-px bg-gradient-to-b from-mist to-transparent" animate={{ scaleY: [0.3, 1, 0.3], originY: 0 }} transition={{ duration: 1.8, repeat: Infinity }} />
+          </motion.div>
         </motion.div>
       </div>
-      <div className="relative mx-auto mt-4 max-w-3xl px-4 pb-24 md:-mt-10">
-        <Reveal><VeilLoop /></Reveal>
+    </section>
+  );
+}
+
+function LensSection() {
+  return (
+    <section id="lens" className="relative mx-auto max-w-6xl px-4 py-28 md:px-8">
+      <div className="grid items-center gap-12 md:grid-cols-[0.8fr_1.2fr]">
+        <Reveal>
+          <p className="font-mono text-xs uppercase tracking-[0.3em] text-mist">Privacy lens</p>
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">See it the way <span className="font-serif font-normal italic text-cloud">the cloud</span> does.</h2>
+          <p className="mt-4 text-mist">Move your cursor over the email. Inside the lens is exactly what Gemini in the cloud receives — every name, ID,
+            amount and address swapped for a tag. Everything outside the lens never leaves your device.</p>
+          <div className="mt-8"><VeilLoop /></div>
+        </Reveal>
+        <Reveal delay={0.1}><PrivacyLens /></Reveal>
       </div>
     </section>
   );
@@ -244,7 +284,7 @@ function Finale() {
         <Reveal delay={0.15}>
           <div className="mt-10">
             <Magnetic strength={0.4}>
-              <a href={STUDIO} className="ring-spin inline-flex items-center gap-2 rounded-full bg-white/[.06] px-8 py-4 text-lg font-medium">Open Veil Studio →</a>
+              <a href={STUDIO} className="liquid ring-spin inline-flex items-center gap-2 rounded-full px-8 py-4 text-lg font-medium">Open Veil Studio →</a>
             </Magnetic>
           </div>
           <p className="mt-5 text-xs text-dim">Best in desktop Chrome with on-device Gemini Nano. Works in any browser in safe mode.</p>
@@ -266,12 +306,14 @@ function Finale() {
 export function Landing() {
   return (
     <div className="grain relative">
+      <LiquidGlassDefs />
       <IntroLoader />
       <CursorLight />
       <Nav />
       <main className="relative z-10">
         <Hero />
         <Marquee />
+        <LensSection />
         <section id="how"><PipelineStory /></section>
         <Proof />
         <Research />

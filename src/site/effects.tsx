@@ -154,6 +154,57 @@ export function WordsReveal({ text, className = "", delay = 0 }: { text: string;
   );
 }
 
+/**
+ * Headline whose letters swell in weight as the cursor approaches (Geist is a variable font).
+ * Words still reveal one by one on load. Updates go straight to the DOM — no React re-render per move.
+ */
+export function ProximityText({ text, delay = 0, className = "", base = 560, max = 820, radius = 170 }:
+  { text: string; delay?: number; className?: string; base?: number; max?: number; radius?: number }) {
+  const letters = useRef<HTMLSpanElement[]>([]);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    if (reduce || !finePointer()) return;
+    let centers: { x: number; y: number }[] = [];
+    let raf = 0;
+    const measure = () => { centers = letters.current.map((el) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }); };
+    const onMove = (e: PointerEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        if (!centers.length) measure();
+        letters.current.forEach((el, i) => {
+          const c = centers[i]; if (!c) return;
+          const d = Math.hypot(e.clientX - c.x, e.clientY - c.y);
+          const t = Math.max(0, 1 - d / radius);
+          el.style.fontVariationSettings = `"wght" ${Math.round(base + (max - base) * t * t)}`;
+        });
+      });
+    };
+    const reset = () => { centers = []; };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("scroll", reset, { passive: true });
+    window.addEventListener("resize", reset);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("pointermove", onMove); window.removeEventListener("scroll", reset); window.removeEventListener("resize", reset); };
+  }, [reduce, base, max, radius]);
+
+  let k = 0;
+  return (
+    <span className={className} style={{ fontVariationSettings: `"wght" ${base}` }}>
+      {text.split(" ").map((w, wi) => (
+        <motion.span key={wi} className="inline-block whitespace-pre"
+          initial={{ opacity: 0, y: "0.6em", filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, delay: delay + wi * 0.07, ease: [0.16, 1, 0.3, 1] }}>
+          {[...w].map((ch) => {
+            const i = k++;
+            return <span key={i} ref={(el) => { if (el) letters.current[i] = el; }} className="inline-block transition-[font-variation-settings] duration-200"
+              style={{ fontVariationSettings: `"wght" ${base}` }}>{ch}</span>;
+          })}
+          {" "}
+        </motion.span>
+      ))}
+    </span>
+  );
+}
+
 /** The Veil mark: two flowing bands. `draw` animates the stroke in. */
 export function VeilMark({ size = 32, draw = false }: { size?: number; draw?: boolean }) {
   const t = { duration: 1.1, ease: [0.65, 0, 0.35, 1] as const };

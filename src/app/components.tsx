@@ -1,6 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { PLACEHOLDER_RE, riskOf, spanKey, type Span, type VeilResult, type Clue } from "../engine";
+import { PLACEHOLDER_RE, LOOSE_PLACEHOLDER_RE, riskOf, spanKey, type Span, type VeilResult, type Clue } from "../engine";
+import { Scramble } from "../site/effects";
 import type { Receipt } from "./receipt";
 import type { ModelState } from "./App";
 
@@ -163,6 +164,50 @@ export function RiskCard({ result, suggestions, onMask, onKeep }: {
   );
 }
 
+/**
+ * The cloud's answer with real values restored — each value decrypts into place with a teal glow,
+ * so you can see exactly what was put back on this device.
+ */
+export function RestoredView({ raw, vault, reserved }: { raw: string; vault: Map<string, string>; reserved: Set<string> }) {
+  const re = new RegExp(LOOSE_PLACEHOLDER_RE.source, "g");
+  const parts: React.ReactNode[] = [];
+  let cur = 0, i = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(raw))) {
+    const id = m[1].toUpperCase();
+    const v = reserved.has(id) ? undefined : vault.get(id);
+    if (m.index > cur) parts.push(<Fragment key={`t${i}`}>{raw.slice(cur, m.index)}</Fragment>);
+    parts.push(v === undefined ? <Fragment key={`k${i}`}>{m[0]}</Fragment> : (
+      <motion.span key={`v${i}`} className="restored" title={`restored on this device · was ${m[0]}`}
+        initial={{ backgroundColor: "rgba(45,212,191,.35)", boxShadow: "0 0 18px rgba(45,212,191,.6)" }}
+        animate={{ backgroundColor: "rgba(45,212,191,.08)", boxShadow: "0 0 0px rgba(45,212,191,0)" }}
+        transition={{ duration: 1.8, delay: 0.3 + Math.min(i, 24) * 0.06 }}>
+        <Scramble text={v} duration={700} />
+      </motion.span>
+    ));
+    cur = m.index + m[0].length;
+    i++;
+  }
+  if (cur < raw.length) parts.push(<Fragment key="end">{raw.slice(cur)}</Fragment>);
+  return <div className="doc prose">{parts}</div>;
+}
+
+/** A short burst of teal particles — the "your data came home" moment. Pure DOM, no WebGL. */
+export function Burst() {
+  const dots = Array.from({ length: 18 }, (_, k) => {
+    const a = (k / 18) * Math.PI * 2;
+    return { x: Math.cos(a) * (40 + (k % 3) * 18), y: Math.sin(a) * (26 + (k % 4) * 10) };
+  });
+  return (
+    <span className="burst" aria-hidden>
+      {dots.map((d, k) => (
+        <motion.i key={k} initial={{ x: 0, y: 0, opacity: 1, scale: 1 }} animate={{ x: d.x, y: d.y, opacity: 0, scale: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: k * 0.01 }} />
+      ))}
+    </span>
+  );
+}
+
 /** 1 Paste → 2 Review → 3 Ask. Always visible so it's obvious what to do next. */
 export function StepGuide({ step, running }: { step: 1 | 2 | 3; running: boolean }) {
   const items = [
@@ -197,7 +242,7 @@ export function Channel({ sending, answered, values }: { sending: boolean; answe
     : sending ? "sending tags only…" : answered ? "answer restored on this device" : `${values} values will stay here`;
   return (
     <div className="channel" aria-live="polite">
-      <span className="node d">● this device</span>
+      <span className="node d" style={{ position: "relative" }}>● this device{answered && !sending && <Burst key={values} />}</span>
       <div className={`wire ${online ? "" : "off"}`}>
         <AnimatePresence>
           {online && sending && [0, 1, 2].map((k) => (
@@ -212,7 +257,7 @@ export function Channel({ sending, answered, values }: { sending: boolean; answe
           ))}
         </AnimatePresence>
       </div>
-      <span className={`node c ${online ? "" : "off"}`}>cloud ●</span>
+      <span className={`node c ${online ? "" : "off"}`} style={{ position: "relative" }}>cloud ●</span>
       <span className="muted" style={{ minWidth: 220 }}>{label}</span>
     </div>
   );
