@@ -1,0 +1,41 @@
+:root {
+  --bg: #f6f5f2; --card: #fff; --ink: #1d1d1f; --muted: #6b6b70; --line: #e4e2dc;
+  --accent: #3b3bd6; --rule: #ffe08a; --nano: #b9e3c6; --bad: #c0392b; --good: #1e8449; --warn: #b9770e;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--ink);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #141416; --card: #1e1e22; --ink: #ececef; --muted: #9a9aa2; --line: #2e2e34; --rule: #6b5a1c; --nano: #1f5a35; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+#app { max-width: 1200px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { margin: 0 0 4px; font-size: 1.6rem; }
+h2 { margin: 0 0 12px; font-size: 1rem; }
+.sub, .muted { color: var(--muted); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; margin-top: 16px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid .card { margin-top: 16px; }
+@media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+label { display: block; font-weight: 600; margin-bottom: 6px; }
+input, select, textarea { width: 100%; font: inherit; padding: 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
+textarea { margin-top: 8px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+button { font: inherit; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+.doc { white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace; font-size: 13px; line-height: 1.6; margin: 0; }
+mark { border-radius: 3px; padding: 0 2px; color: inherit; }
+mark.rule { background: var(--rule); }
+mark.nano { background: var(--nano); }
+mark.attacker { background: #f5b7b1; }
+@media (prefers-color-scheme: dark) { mark.attacker { background: #7b2d26; } }
+.warn { color: var(--warn); }
+.legend { font-weight: 400; font-size: .8rem; margin-left: 8px; }
+q { font-style: italic; }
+.missed { color: var(--bad); }
+.ok { color: var(--good); }
+.risk-high { color: var(--bad); } .risk-medium { color: var(--warn); } .risk-low { color: var(--good); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+progress { width: 100%; margin-top: 8px; }
+#status-card button { margin-top: 8px; }
