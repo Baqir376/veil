@@ -125,7 +125,8 @@ export function warmUp(onProgress: (pct: number) => void) {
 }
 
 /** No on-device call may hang the app: give up after this long and let the pipeline degrade gracefully. */
-const DEVICE_TIMEOUT_MS = 25_000;
+// Benchmark (113 cases): normal on-device calls finish in 1–10 s; stalls are clustered and unbounded.
+const DEVICE_TIMEOUT_MS = 20_000;
 
 function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {

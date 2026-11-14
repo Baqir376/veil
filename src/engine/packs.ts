@@ -114,8 +114,12 @@ export const IN: Pack = {
     { kind: "AMOUNT", category: "AMOUNT", re: /(?:Rs\.?|INR|₹)\s?([\d,]+(?:\.\d+)?(?:\s?(?:lakh|lakhs|crore|crores|cr|L))?)/gi, group: 1 },
   ],
   neverMask: ["Form 26AS", "26AS", "AIS", "TIS", "ITR", "AY", "FY", "u/s", "TDS", "TCS", "GST", "GSTIN", "FD", "RD",
-    "PAN", "Aadhaar", "IFSC", "UPI", "Income Tax", "CA", "HUF", "NRI", "EPF", "PPF", "a/c", "A/c", "Rs", "Rs."],
+    "PAN", "Aadhaar", "IFSC", "UPI", "Income Tax", "CA", "HUF", "NRI", "EPF", "PPF", "a/c", "A/c", "Rs", "Rs.",
+    "HRA", "LTA", "ELSS", "NPS", "HSN", "SAC", "ITC", "CBDT", "Form 16", "GSTR-1", "GSTR-3B"],
   protect: [
+    // Deduction sections: 80C, 80D, 80CCD(1B), 80TTA, 24(b)…
+    /\b80[A-Z]{1,4}(?:\(\d[A-Z]?\))?(?![A-Za-z0-9])/g,
+    /\b24\(b\)/g,
     /\b(?:AY|FY|A\.Y\.|F\.Y\.)\s?\d{4}\s?[-–]\s?\d{2,4}\b/g,
     /\bu\/s\s?\d+[A-Z]*(?:\([0-9a-zA-Z]+\))*/g,
     /\bSection\s\d+[A-Z]*(?:\([0-9a-zA-Z]+\))*/g,

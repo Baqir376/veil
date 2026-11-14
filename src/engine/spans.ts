@@ -14,7 +14,10 @@ lives live living lived works work working worked stays stay staying called call
 uses used using needs need needed sends send document text sample page click turn open load run
 salaried employed self-employed retired
 phone mobile email mail address name card cvv cvc key api api_key token password customer details
-space inside zero-width width letters digits look latin full number numbers id`.split(/\s+/);
+space inside zero-width width letters digits look latin full number numbers id
+monday tuesday wednesday thursday friday saturday sunday today tomorrow yesterday tonight morning evening
+january february march april may june july august september october november december
+whatsapp gmail google outlook instagram facebook linkedin telegram zoom teams excel chatgpt gemini wifi wi-fi`.split(/\s+/);
 
 const HONORIFICS = new Set("mr mrs ms miss dr shri smt sri kumari prof sir madam ji bhai sahab".split(" "));
 
@@ -125,11 +128,11 @@ export class SpanTools {
     return { start, end };
   }
 
-  /** Every occurrence of a never-mask term in the text (word-bounded). Model spans are cut around these. */
+  /** Every occurrence of a never-mask term in the text (word-bounded, any case). Model spans are cut around these. */
   private termRanges(text: string): { start: number; end: number }[] {
     const out: { start: number; end: number }[] = [];
     for (const term of this.never) {
-      const re = new RegExp(`(?<![A-Za-z0-9])${term.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}(?![A-Za-z0-9])`, "g");
+      const re = new RegExp(`(?<![A-Za-z0-9])${term.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}(?![A-Za-z0-9])`, "gi");
       for (const m of text.matchAll(re)) out.push({ start: m.index!, end: m.index! + m[0].length });
     }
     return out;

@@ -202,6 +202,33 @@ describe("attacker noise (B3/B15)", () => {
   });
 });
 
+describe("utility: benchmark over-masking (run 2026-11-14)", () => {
+  it.each([
+    ["hi this is Aarav Shah from Infosys please call asap regarding the gst refund", "gst", "Aarav Shah"],
+    ["Please ask Rose Shah from accounts to approve the invoice by Friday.", "Friday", "Rose Shah"],
+    ["WhatsApp me on nine eight two two zero one four five six seven after 6pm.", "WhatsApp", "nine eight"],
+    ["My client is the only female cardiologist in Chiplun. She wants advice on 80C and 80CCD(1B).", "80C", "Chiplun"],
+  ])("%s keeps %s", async (text, keepTerm, mustGo) => {
+    // A deliberately over-eager model that flags everything capitalised or listed.
+    const eager: Detector = {
+      async direct(t) {
+        const items = ["gst", "Friday", "WhatsApp", "80C", "80CCD(1B)", "Aarav Shah", "Infosys", "Rose Shah", "Chiplun"]
+          .filter((x) => t.includes(x)).map((x) => ({ text: x, category: "ORG" as Category }));
+        return { ms: 1, data: { items } };
+      },
+      async indirect(t) {
+        const items = ["advice on 80C", "only female cardiologist", "by Friday"].filter((x) => t.includes(x)).map((x) => ({ text: x, category: "QUASI" as Category }));
+        return { ms: 1, data: { items } };
+      },
+      async attack() { return { ms: 1, data: { clues: [] } }; },
+    };
+    const r = await runVeil(text, { regions: ["IN"], detector: eager });
+    const b = buildCloudPayload({ question: "Help.", questionSpans: [], doc: text, docSpans: r.spans, packs: r.packs });
+    expect(b.payload).toContain(keepTerm);
+    expect(b.payload.toLowerCase()).not.toContain(mustGo.toLowerCase());
+  });
+});
+
 describe("obfuscation decoding", () => {
   it("emails written with [at] / (dot) and spelled-out phone numbers", () => {
     const t = "Reach me at rohan [at] gmail [dot] com or rohan(at)gmail(dot)com. WhatsApp: nine eight two two zero one four five six seven.";
