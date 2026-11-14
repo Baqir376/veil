@@ -5,7 +5,7 @@ real values back — locally.** Built for **#BuildHybridAI** with **Firebase AI 
 as a web app *and* a Chrome extension for ChatGPT, Gemini and Claude.
 
 **Live:** https://veil-hybrid.web.app · **Studio:** https://veil-hybrid.web.app/app/ ·
-**Extension:** [download zip](https://veil-hybrid.web.app/downloads/veil-extension.zip) · **Demo video:** _(YouTube link)_
+**Extension:** [download zip](https://veil-hybrid.web.app/downloads/veil-extension.zip) · **Demo video:** [youtu.be/JJ65ZtHwRvo](https://youtu.be/JJ65ZtHwRvo)
 
 ---
 
